@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Integrasi Terpadu - Ekosistem Digital & Pengembangan Struktur</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F2F2F0;
+            color: #1A1A1A;
+            line-height: 1.9;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container-utama {
+            max-width: 1100px;
+            margin: 40px auto;
+            background-color: #FFFFFF;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+        }
+
+        /* HEADER */
+        .header-elite {
+            background-color: #0D1B2A;
+            color: #FFFFFF;
+            padding: 120px 60px;
+            text-align: center;
+            border-bottom: 8px solid #8A6D3B;
+        }
+        .header-elite h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 64px;
+            margin: 0;
+            letter-spacing: 2px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .header-elite p {
+            margin: 30px 0 0 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            color: #94A3B8;
+            font-weight: 500;
+        }
+
+        /* BAGIAN INTI */
+        .konten {
+            padding: 100px 60px;
+        }
+
+        .judul-bagian {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 42px;
+            color: #0D1B2A;
+            margin: 0 0 50px 0;
+            position: relative;
+            padding-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .judul-bagian::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background-color: #8A6D3B;
+        }
+
+        .judul-bagian-tengah {
+            text-align: center;
+        }
+        .judul-bagian-tengah::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .teks-justify {
+            text-align: justify;
+            text-justify: inter-word;
+            margin-bottom: 30px;
+            color: #333333;
+            font-weight: 300;
+        }
+
+        /* DROP CAP */
+        .drop-cap::first-letter {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 70px;
+            font-weight: 700;
+            float: left;
+            line-height: 60px;
+            padding-right: 15px;
+            padding-top: 5px;
+            color: #0D1B2A;
+        }
+
+        /* LAYOUT ASIMETRIS */
+        .grid-asimetris {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+            align-items: start;
+        }
+        .grid-asimetris-kanan {
+            border-left: 1px solid #E2E8F0;
+            padding-left: 40px;
+        }
+        .kutipan-samping {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-style: italic;
+            color: #0D1B2A;
+            line-height: 1.5;
+            border-left: 4px solid #8A6D3B;
+            padding-left: 25px;
+        }
+
+        /* KOTAK PILAR (HOVER EFEK) */
+        .pembungkus-pilar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+        .kotak-pilar {
+            border: 1px solid #CBD5E1;
+            padding: 45px;
+            transition: all 0.4s ease;
+            background-color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+        }
+        .kotak-pilar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background-color: #0D1B2A;
+            transition: height 0.4s ease;
+        }
+        .kotak-pilar:hover {
+            border-color: #0D1B2A;
+            box-shadow: 15px 15px 0px rgba(13, 27, 42, 0.05);
+            transform: translate(-5px, -5px);
+        }
+        .kotak-pilar:hover::before {
+            height: 100%;
+        }
+        .kotak-pilar h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 30px;
+            margin: 0 0 20px 0;
+            color: #8A6D3B;
+            font-weight: 600;
+        }
+        .kotak-pilar p {
+            text-align: justify;
+            font-size: 15px;
+            margin: 0;
+            color: #475569;
+        }
+
+        /* BAGIAN FILOSOFI (BACKGROUND GELAP) */
+        .bagian-gelap {
+            background-color: #0D1B2A;
+            color: #E2E8F0;
+            padding: 100px 60px;
+        }
+        .bagian-gelap .judul-bagian {
+            color: #FFFFFF;
+        }
+        .bagian-gelap .teks-justify {
+            color: #CBD5E1;
+            font-weight: 300;
+        }
+        
+        .grid-tiga-kolom {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+            margin-top: 60px;
+        }
+        .item-filosofi {
+            border-top: 3px solid #8A6D3B;
+            padding-top: 30px;
+        }
+        .item-filosofi h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            margin: 0 0 20px 0;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+        .item-filosofi p {
+            text-align: justify;
+            font-size: 15px;
+            margin: 0;
+            color: #94A3B8;
+        }
+
+        /* BAGIAN PRIVASI */
+        .bagian-privasi {
+            padding: 100px 60px;
+            background-color: #F8FAFC;
+        }
+        .kotak-peringatan {
+            border: 2px solid #0D1B2A;
+            padding: 60px;
+            margin-top: 50px;
+            position: relative;
+            background: #FFFFFF;
+        }
+        .kotak-peringatan::before {
+            content: 'KOMITMEN PROFESIONAL';
+            position: absolute;
+            top: -15px;
+            left: 40px;
+            background-color: #FFFFFF;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #8A6D3B;
+        }
+
+        /* BAGIAN SUMBER DAYA */
+        .bagian-sumber-daya {
+            padding: 100px 60px;
+            background-color: #FFFFFF;
+        }
+        .grid-vertikal-berbaris {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+        .box-garis-bawah {
+            border-bottom: 2px solid #E2E8F0;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+        }
+        .box-garis-bawah h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            color: #0D1B2A;
+            margin-bottom: 15px;
+        }
+        .box-garis-bawah p {
+            text-align: justify;
+            color: #475569;
+            font-size: 15px;
+        }
+
+        /* BAGIAN KUTIPAN BESAR (FULL WIDTH) */
+        .bagian-kutipan-besar {
+            background-color: #F8FAFC;
+            padding: 120px 60px;
+            text-align: center;
+            border-top: 1px solid #E2E8F0;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .kutipan-besar-teks {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 42px;
+            font-style: italic;
+            color: #0D1B2A;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.4;
+            position: relative;
+        }
+        .kutipan-besar-teks::before {
+            content: '“';
+            font-size: 120px;
+            position: absolute;
+            top: -60px;
+            left: -40px;
+            color: #E2E8F0;
+            font-family: 'Cormorant Garamond', serif;
+        }
+        .kutipan-besar-teks::after {
+            content: '”';
+            font-size: 120px;
+            position: absolute;
+            bottom: -100px;
+            right: -40px;
+            color: #E2E8F0;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* BAGIAN VISI MASA DEPAN (LIST ELEGAN) */
+        .bagian-visi-masa-depan {
+            padding: 100px 60px;
+            background-color: #FFFFFF;
+        }
+        .list-elegan {
+            margin-top: 50px;
+        }
+        .item-list-elegan {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: flex-start;
+        }
+        .angka-romawi {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            color: #8A6D3B;
+            min-width: 60px;
+            font-weight: 600;
+            line-height: 1;
+            padding-top: 5px;
+        }
+        .isi-list-elegan h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            color: #0D1B2A;
+            margin-bottom: 10px;
+        }
+        .isi-list-elegan p {
+            text-align: justify;
+            color: #475569;
+            font-size: 15px;
+        }
+
+        /* FOOTER */
+        .footer-mewah {
+            background-color: #0D1B2A;
+            color: #64748B;
+            padding: 80px 60px;
+            text-align: center;
+            border-top: 1px solid #1E293B;
+        }
+        .footer-mewah h2 {
+            font-family: 'Cormorant Garamond', serif;
+            color: #FFFFFF;
+            font-size: 32px;
+            margin: 0 0 20px 0;
+            font-weight: 700;
+        }
+        .footer-mewah p {
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        .email-resmi {
+            color: #FFFFFF;
+            font-size: 20px;
+            text-decoration: none;
+            border-bottom: 2px solid #8A6D3B;
+            padding-bottom: 8px;
+            display: inline-block;
+            margin-top: 30px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+        }
+        .hak-cipta {
+            margin-top: 60px;
+            font-size: 12px;
+            color: #475569;
+            border-top: 1px solid #1E293B;
+            padding-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-utama">
+
+    <!-- HEADER -->
+    <header class="header-elite">
+        <h1>SISTEM INTEGRASI TERPADU</h1>
+        <p>Ekosistem Digital & Pengembangan Struktur Berkelanjutan</p>
+    </header>
+
+    <!-- BAGIAN 1: PROFIL INISIATOR -->
+    <section class="konten">
+        <h2 class="judul-bagian">Profil Inisiator & Pengembangan Sistem</h2>
+        
+        <div class="grid-asimetris">
+            <div>
+                <p class="teks-justify drop-cap">
+                    Pengembangan arah dan fokus utama dalam entitas ini digerakkan oleh Muhammad Fajri Munawar, lahir di Jakarta pada tahun 2003 (kini berusia 23 tahun). Ia merupakan seorang individu yang memiliki ketertarikan dan keterlibatan aktif dalam pengembangan berbagai inisiatif bisnis serta organisasi sejak usia muda. Dikenal sebagai sosok yang berfokus pada pembangunan sistem, struktur, serta pengelolaan berbagai bentuk entitas yang bergerak secara bertahap dan terarah dalam berbagai sektor.
+                </p>
+                <p class="teks-justify">
+                    Sejak awal perjalanan pengembangannya, pendekatan yang diterapkan tidak hanya memusatkan perhatian pada satu bidang tertentu, melainkan mengembangkan sistem lintas sektor. Hal ini dilakukan dengan tujuan menciptakan keterhubungan antar bidang yang saling mendukung dalam jangka panjang, sehingga setiap inisiatif yang dibangun tidak berdiri secara terpisah, melainkan menjadi bagian dari sistem yang lebih luas dan terintegrasi.
+                </p>
+                <p class="teks-justify">
+                    Dalam praktiknya, pengembangan yang dilakukan mencakup berbagai bentuk usaha, mulai dari skala usaha kecil dan menengah hingga entitas berbasis perusahaan dengan struktur yang lebih kompleks. Proses tersebut dijalankan secara bertahap, dengan mempertimbangkan kebutuhan operasional, efisiensi sistem, serta relevansi terhadap perkembangan lingkungan. Selain entitas berbasis perusahaan, dikembangkan pula berbagai bentuk organisasi non-perusahaan yang berperan dalam mendukung pengelolaan sistem dan keseimbangan struktural.
+                </p>
+            </div>
+            <div class="grid-asimetris-kanan">
+                <div class="kutipan-samping">
+                    Kualitas sistem dan struktur yang dibangun selalu diutamakan di atas pencapaian individu. Setiap langkah diarahkan untuk menciptakan stabilitas serta kesiapan dalam menghadapi berbagai kemungkinan di masa depan.
+                </div>
+            </div>
+        </div>
+
+        <p class="teks-justify">
+            Dalam pengembangan arah dan fokus utamanya, Muhammad Fajri Munawar menempatkan perhatian yang lebih terarah pada sektor teknologi serta media digital sebagai dua pilar utama yang menjadi fondasi dari berbagai inisiatif yang dibangun. Kedua bidang tersebut dipandang sebagai ruang strategis yang memiliki potensi jangka panjang dan relevansi tinggi terhadap perkembangan zaman. Langkah-langkah yang dilakukan berorientasi pada penguatan sistem digital, pengelolaan informasi, serta pembangunan ekosistem berbasis teknologi yang adaptif dan berkelanjutan.
+        </p>
+        <p class="teks-justify">
+            Sementara itu, keterlibatan dalam berbagai sektor usaha lainnya tetap berjalan sebagai bagian dari proses pengembangan yang lebih luas. Kegiatan usaha yang mencakup sektor Usaha Kecil Menengah, pangan, serta bidang lainnya hadir sebagai bentuk diversifikasi yang berkembang secara alami seiring dengan kebutuhan dan peluang yang ada, bukan sebagai elemen yang ditonjolkan secara dominan. Teknologi dan media digital berperan sebagai pusat penghubung yang mengintegrasikan berbagai lini aktivitas tersebut, sehingga setiap pengembangan memiliki keterkaitan yang logis dan berkesinambungan.
+        </p>
+        <p class="teks-justify">
+            Pendekatan yang diterapkan menitikberatkan pada pembangunan sistem yang berkelanjutan. Hal ini mencakup penguatan fondasi operasional, penyusunan struktur yang terarah, serta pengembangan mekanisme kerja yang dapat beradaptasi terhadap perubahan. Dengan demikian, setiap inisiatif yang dijalankan tidak hanya berorientasi pada hasil jangka pendek, tetapi juga pada kesinambungan dan ketahanan dalam menghadapi berbagai tantangan di masa depan. Keberadaan organisasi non-perusahaan menjadi bagian dari upaya untuk menciptakan keseimbangan antara aspek operasional, struktural, serta pengembangan jangka panjang.
+        </p>
+    </section>
+
+    <!-- BAGIAN 2: PILAR PENGEMBANGAN -->
+    <section class="konten" style="background-color: #F8FAFC; padding-top: 0;">
+        <h2 class="judul-bagian judul-bagian-tengah">Kerangka Pengembangan Lintas Sektor</h2>
+        <p class="teks-justify" style="max-width: 800px; margin: 0 auto 60px auto; text-align: center;">
+            Pengembangan lintas sektor tidak dilakukan secara terpisah, melainkan melalui pendekatan integratif yang memungkinkan setiap sektor saling terhubung. Integrasi ini bertujuan untuk menciptakan efisiensi, memperkuat struktur, serta membuka peluang kolaborasi yang lebih luas. Dengan demikian, setiap bidang yang dikembangkan memiliki peran dalam mendukung keseluruhan sistem yang dibangun.
+        </p>
+
+        <div class="pembungkus-pilar">
+            <div class="kotak-pilar">
+                <h3>Pilar Utama: Teknologi & Digital</h3>
+                <p>Fokus pada inovasi, digitalisasi, dan pembangunan ekosistem teknologi yang adaptif terhadap perubahan zaman. Keterlibatan dalam sektor ini mencerminkan upaya untuk mengikuti perkembangan inovasi, memperkuat struktur, serta membuka peluang kolaborasi yang lebih luas. Sistem digital yang dibangun dirancang untuk mendukung keberlanjutan operasional jangka panjang.</p>
+            </div>
+            <div class="kotak-pilar">
+                <h3>Pilar Utama: Media Digital</h3>
+                <p>Pengelolaan informasi, komunikasi, dan penyampaian konten secara luas serta terstruktur. Sektor ini berperan penting dalam pengembangan kerangka kerja yang dapat menunjang keberlangsungan berbagai aktivitas yang dijalankan secara menyeluruh. Media digital diposisikan sebagai pusat penghubung yang mengintegrasikan berbagai lini aktivitas secara logis.</p>
+            </div>
+            <div class="kotak-pilar">
+                <h3>Diversifikasi: Usaha Kecil & Pangan</h3>
+                <p>Hadir sebagai bagian dari dinamika perjalanan yang melengkapi keseluruhan proses yang dijalankan. Kegiatan usaha ini berkembang secara alami seiring dengan kebutuhan dan peluang yang ada, mendukung kebutuhan dasar dan distribusi. Pendekatan ini berfungsi sebagai bentuk diversifikasi yang menjaga keseimbangan sistem secara menyeluruh.</p>
+            </div>
+            <div class="kotak-pilar">
+                <h3>Pendukung: Organisasi Non-Perusahaan</h3>
+                <p>Berperan dalam mendukung pengelolaan sistem, pengembangan sumber daya, serta pembentukan kerangka kerja. Keberadaan organisasi ini menciptakan keseimbangan antara aspek operasional, struktural, serta pengembangan jangka panjang. Entitas ini memastikan setiap inisiatif memiliki fondasi yang cukup kuat sebelum melangkah lebih jauh.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAGIAN 3: FILOSOFI GELAP -->
+    <section class="bagian-gelap">
+        <h2 class="judul-bagian">Filosofi Operasional & Struktural</h2>
+        <p class="teks-justify">
+            Dalam aspek operasional, pengembangan sumber daya ditempatkan sebagai bagian yang tidak terpisahkan dari setiap inisiatif. Baik dalam konteks organisasi maupun entitas usaha, penguatan kapasitas dan struktur menjadi faktor utama dalam memastikan keberlangsungan serta efektivitas operasional. Hal ini mencakup penyusunan sistem kerja, pengelolaan proses, serta pengembangan kerangka yang dapat mendukung aktivitas secara berkelanjutan.
+        </p>
+        <p class="teks-justify">
+            Seiring dengan perkembangan waktu, berbagai inisiatif yang dijalankan terus mengalami penyesuaian dan penyempurnaan. Proses ini dilakukan sebagai bentuk adaptasi terhadap perubahan kondisi, perkembangan teknologi, serta dinamika lingkungan yang terus berkembang. Dengan pendekatan yang fleksibel namun tetap terarah, setiap pengembangan dapat menyesuaikan diri tanpa kehilangan arah utama yang telah ditetapkan.
+        </p>
+        <p class="teks-justify">
+            Pendekatan yang diterapkan tidak menempatkan pencapaian individu sebagai fokus utama, melainkan lebih menitikberatkan pada kualitas sistem dan struktur yang dibangun. Tujuan dari pendekatan ini adalah untuk memastikan bahwa setiap pengembangan memiliki arah yang jelas serta dapat memberikan kontribusi yang berkelanjutan. Setiap langkah diarahkan untuk menciptakan stabilitas serta kesiapan dalam menghadapi berbagai kemungkinan di masa depan.
+        </p>
+
+        <div class="grid-tiga-kolom">
+            <div class="item-filosofi">
+                <h4>Pendekatan Bertahap</h4>
+                <p>Proses pengembangan dijalankan secara bertahap untuk memastikan setiap tahapan memiliki fondasi yang cukup kuat sebelum melangkah ke tahap berikutnya. Pendekatan ini mencerminkan upaya untuk menjaga stabilitas sekaligus memastikan kesinambungan operasional tanpa terburu-buru.</p>
+            </div>
+            <div class="item-filosofi">
+                <h4>Orientasi Jangka Panjang</h4>
+                <p>Fokus diberikan pada penguatan sistem dibandingkan dengan ekspansi yang bersifat cepat. Setiap langkah yang diambil diarahkan untuk menciptakan stabilitas serta kesiapan dalam menghadapi berbagai kemungkinan di masa depan, menekankan kualitas struktural di atas kuantitas.</p>
+            </div>
+            <div class="item-filosofi">
+                <h4>Adaptasi & Fleksibilitas</h4>
+                <p>Setiap pengembangan diarahkan untuk menciptakan stabilitas serta kesiapan dalam menghadapi perubahan. Proses ini dilakukan sebagai bentuk adaptasi terhadap perkembangan teknologi serta dinamika lingkungan, tanpa kehilangan arah utama yang telah ditetapkan sejak awal.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAGIAN 4: KUTIPAN BESAR -->
+    <section class="bagian-kutipan-besar">
+        <div class="kutipan-besar-teks">
+            Keseluruhan perjalanan pengembangan ini adalah upaya membangun sistem yang terintegrasi lintas sektor dengan pendekatan yang bertahap, terstruktur, dan berorientasi pada keberlanjutan.
+        </div>
+    </section>
+
+    <!-- BAGIAN 5: VISI MASA DEPAN & PENDEKATAN STRATEGIS -->
+    <section class="bagian-visi-masa-depan">
+        <h2 class="judul-bagian">Visi Pengembangan & Pendekatan Strategis</h2>
+        <p class="teks-justify">
+            Sebagai entitas yang digerakkan oleh inisiatif tunggal, arah pengembangan masa depan difokuskan pada penyempurnaan ekosistem yang telah dirintis. Keterhubungan antar sektor tidak hanya dipertahankan, tetapi terus dioptimalkan agar mampu menyesuaikan diri dengan dinamika global. Pendekatan ini memastikan bahwa setiap inovasi yang diterapkan memiliki relevansi langsung dengan fondasi struktural yang telah dibangun sebelumnya, tanpa mengorbankan stabilitas operasional.
+        </p>
+        <p class="teks-justify">
+            Dalam menjalankan ekosistem ini, perhatian utama diberikan pada bagaimana setiap elemen dapat berfungsi secara harmonis. Sistem yang dibangun dirancang untuk mampu menyerap perubahan tanpa kehilangan identitas dan tujuan utamanya. Oleh karena itu, setiap keputusan strategis diambil melalui pertimbangan yang matang, memprioritaskan ketahanan jangka panjang dibandingkan keuntungan sesaat.
+        </p>
+
+        <div class="list-elegan">
+            <div class="item-list-elegan">
+                <div class="angka-romawi">I</div>
+                <div class="isi-list-elegan">
+                    <h4>Penyempurnaan Ekosistem Digital</h4>
+                    <p>Sebagai pilar utama, ekosistem digital terus disempurnakan untuk meningkatkan efisiensi dan adaptabilitas. Fokus ini mencakup integrasi teknologi yang mendukung automasi proses, pengelolaan data secara terstruktur, dan penguatan keamanan sistem. Penyempurnaan ini bertujuan untuk memastikan bahwa infrastruktur digital mampu menjadi fondasi yang kokoh bagi seluruh inisiatif lintas sektor yang dijalankan.</p>
+                </div>
+            </div>
+            <div class="item-list-elegan">
+                <div class="angka-romawi">II</div>
+                <div class="isi-list-elegan">
+                    <h4>Penguatan Struktur Organisasi</h4>
+                    <p>Pengembangan organisasi non-perusahaan terus diarahkan untuk mendukung keseimbangan operasional. Struktur ini berperan vital dalam pengelolaan sumber daya, pembentukan kerangka kerja, serta penjaminan keberlangsungan aktivitas. Penguatan ini dilakukan secara bertahap, menyesuaikan dengan kebutuhan dan kompleksitas sistem yang terus berkembang dari waktu ke waktu.</p>
+                </div>
+            </div>
+            <div class="item-list-elegan">
+                <div class="angka-romawi">III</div>
+                <div class="isi-list-elegan">
+                    <h4>Integrasi Lintas Sektor yang Mendalam</h4>
+                    <p>Sektor pendukung seperti Usaha Kecil Menengah dan pangan tidak berdiri sendiri, melainkan diintegrasikan ke dalam kerangka sistem yang lebih luas. Integrasi ini menciptakan sinergi di mana setiap sektor saling melengkapi dan mendukung kelancaran operasional keseluruhan. Pendekatan ini meminimalisir ketergantungan pada satu sektor tunggal dan meningkatkan ketahanan sistem secara keseluruhan.</p>
+                </div>
+            </div>
+            <div class="item-list-elegan">
+                <div class="angka-romawi">IV</div>
+                <div class="isi-list-elegan">
+                    <h4>Pemeliharaan Stabilitas & Ketahanan</h4>
+                    <p>Stabilitas operasional menjadi prioritas utama dalam setiap tahapan pengembangan. Sistem dievaluasi secara berkala untuk mengidentifikasi potensi risiko dan area yang memerlukan penyesuaian. Dengan pemeliharaan yang terarah, ekosistem yang dibangun mampu bertahan menghadapi fluktuasi lingkungan eksternal serta mempertahankan konsistensi kinerja dalam jangka panjang.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAGIAN 6: SUMBER DAYA & INTEGRASI -->
+    <section class="bagian-sumber-daya" style="background-color: #F8FAFC;">
+        <h2 class="judul-bagian">Pengelolaan Sumber Daya & Integrasi Sistem</h2>
+        <p class="teks-justify">
+            Dalam aspek operasional, pengembangan sumber daya ditempatkan sebagai bagian yang tidak terpisahkan dari setiap inisiatif. Baik dalam konteks organisasi maupun entitas usaha, penguatan kapasitas dan struktur menjadi faktor utama dalam memastikan keberlangsungan serta efektivitas operasional. Hal ini mencakup penyusunan sistem kerja, pengelolaan proses, serta pengembangan kerangka yang dapat mendukung aktivitas secara berkelanjutan.
+        </p>
+        <p class="teks-justify">
+            Arah pengembangan yang dijalankan mencerminkan upaya untuk menciptakan keterhubungan antara berbagai bidang, sehingga setiap sektor yang dikembangkan dapat saling melengkapi. Dengan pendekatan tersebut, diharapkan setiap inisiatif yang dibangun tidak hanya berdiri sebagai entitas tersendiri, tetapi menjadi bagian dari sistem yang lebih luas dan memiliki daya tahan yang kuat dalam menghadapi dinamika global.
+        </p>
+
+        <div class="grid-vertikal-berbaris" style="margin-top: 50px;">
+            <div class="box-garis-bawah">
+                <h4>Penguatan Kapasitas Struktural</h4>
+                <p>Dalam konteks organisasi maupun entitas usaha, penguatan kapasitas dan struktur menjadi faktor utama dalam memastikan keberlangsungan serta efektivitas operasional. Hal ini mencakup penyusunan sistem kerja, pengelolaan proses, serta pengembangan kerangka yang dapat mendukung aktivitas secara berkelanjutan.</p>
+            </div>
+            <div class="box-garis-bawah">
+                <h4>Keseimbangan Operasional</h4>
+                <p>Organisasi-organisasi yang dikembangkan berperan dalam mendukung pengelolaan sistem, pengembangan sumber daya, serta pembentukan kerangka kerja yang dapat menunjang keberlangsungan berbagai aktivitas yang dijalankan. Keberadaan organisasi ini menjadi bagian dari upaya untuk menciptakan keseimbangan antara aspek operasional, struktural, serta pengembangan jangka panjang.</p>
+            </div>
+            <div class="box-garis-bawah">
+                <h4>Keterhubungan Lintas Sektor</h4>
+                <p>Pendekatan yang diterapkan menciptakan keterhubungan antara berbagai bidang, sehingga setiap sektor yang dikembangkan dapat saling melengkapi. Dengan pendekatan tersebut, diharapkan setiap inisiatif yang dibangun tidak hanya berdiri sebagai entitas tersendiri, tetapi menjadi bagian dari sistem yang lebih luas dan memiliki daya tahan yang kuat.</p>
+            </div>
+            <div class="box-garis-bawah">
+                <h4>Profesionalitas & Konsistensi</h4>
+                <p>Dalam menjalankan berbagai inisiatifnya, prinsip kehati-hatian, konsistensi, serta profesionalitas selalu diutamakan. Pencapaian individu tidak ditempatkan sebagai fokus utama, melainkan kualitas sistem dan struktur yang dibangun. Pendekatan ini bertujuan untuk memastikan bahwa setiap pengembangan memiliki arah yang jelas serta dapat memberikan kontribusi yang berkelanjutan.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAGIAN 7: PRIVASI DAN KONTAK -->
+    <section class="bagian-privasi">
+        <h2 class="judul-bagian judul-bagian-tengah">Komitmen Profesionalitas & Keamanan Informasi</h2>
+        
+        <div class="kotak-peringatan">
+            <p class="teks-justify" style="margin: 0;">
+                Dalam penyampaian informasi kepada publik, diterapkan prinsip selektivitas serta kehati-hatian. Informasi yang disampaikan difokuskan pada gambaran umum terkait pengembangan, struktur, serta arah yang dijalankan, tanpa menampilkan data yang bersifat sensitif. Pendekatan ini dilakukan untuk menjaga profesionalitas serta keamanan informasi.
+            </p>
+            <br>
+            <p class="teks-justify" style="margin: 0;">
+                Seluruh informasi yang disampaikan melalui platform ini dirancang untuk memberikan gambaran strategis dan struktural mengenai arah pengembangan yang dijalankan. Fokus informasi berpusat pada kualitas sistem, integrasi, serta kesinambungan jangka panjang, tanpa mengungkapkan detail internal yang bersifat privat atau menimbulkan kesan berlebihan.
+            </p>
+            <br>
+            <p class="teks-justify" style="margin: 0;">
+                Dalam menjalankan berbagai inisiatifnya, Muhammad Fajri Munawar mengedepankan prinsip kehati-hatian, konsistensi, serta profesionalitas. Pencapaian individu tidak ditempatkan sebagai fokus utama, melainkan kualitas sistem dan struktur yang dibangun. Keseluruhan representasi yang ditampilkan tetap berada dalam batas profesionalitas yang wajar serta memberikan gambaran yang jelas mengenai arah pengembangan yang sedang dijalankan.
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 80px;">
+            <p class="teks-justify" style="max-width: 700px; margin: 0 auto 40px auto; text-align: center;">
+                Informasi lebih lanjut terkait berbagai proyek, pengembangan, serta struktur yang sedang berjalan dapat diakses melalui kanal resmi yang tersedia. Seluruh informasi yang disampaikan kepada publik disusun secara profesional dengan mempertimbangkan relevansi, kejelasan, serta keamanan data.
+            </p>
+            <a href="mailto:info@tatasistem.id" class="email-resmi">info@tatasistem.id</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer-mewah">
+        <h2>SISTEM INTEGRASI TERPADU</h2>
+        <p>Membangun Ekosistem yang Terhubung, Terstruktur, dan Berkelanjutan</p>
+        <div class="hak-cipta">
+            <p>&copy; Hak Cipta Dilindungi. Seluruh informasi disusun secara profesional dengan mempertimbangkan keamanan data.</p>
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>
