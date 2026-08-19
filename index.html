@@ -18,7 +18,17 @@
             height: 100%;
             width: 100%;
             overflow: hidden; /* TIDAK ADA SCROLL */
-            background: #020611; /* Latar hitam kebiruan pekat */
+            
+            /* GAMBAR DIMASUKKAN */
+            background-image: url('https://z-cdn-media.chatglm.cn/files/144bee18-c05e-4f79-a279-d6b536688571.jpeg?auth_key=1887161768-0aed0db43a4e4ee4b0e5f17f82232796-0-3d20dc92ad0c06bbc0a6d9564a2fc28b');
+            
+            /* DI LEBARIN KE SAMPING 100%, TIDAK DIBESARKAN (ZOOM), TIDAK KEPOTONG */
+            background-size: 100% 100%; 
+            
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #000; /* Hanya fallback sebelum gambar muat */
+            
             font-family: 'Outfit', sans-serif;
         }
 
@@ -34,25 +44,6 @@
             z-index: 10;
         }
 
-        /* Cahaya Latar Organik */
-        .ambient-glow {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90vmin; 
-            height: 90vmin;
-            background: radial-gradient(circle, rgba(0, 86, 210, 0.12) 0%, transparent 60%);
-            z-index: 1;
-            animation: breathe 10s infinite ease-in-out;
-            pointer-events: none;
-        }
-
-        @keyframes breathe {
-            0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-        }
-
         /* BAGIAN TENGAH (Judul & Hak Cipta) */
         .center-content {
             flex: 1;
@@ -64,22 +55,23 @@
             width: 100%;
         }
 
-        /* FORMAT KALIMAT JUDUL (SANGAT TEBAL, SOLID, PROFESIONAL) */
+        /* FORMAT KALIMAT JUDUL */
         h1 {
             font-family: 'Sora', sans-serif;
-            font-weight: 800; /* BERAT FONT MAKSIMAL AGAR TIDAK KURUS */
-            font-size: clamp(1.4rem, 6.5vw, 5.5rem); /* Otomatis mengecil di HP tanpa berantakan */
+            font-weight: 800; 
+            font-size: clamp(1.4rem, 6.5vw, 5.5rem); 
             line-height: 1.1;
-            letter-spacing: clamp(1px, 0.5vw, 3px); /* Spacing elegan */
+            letter-spacing: clamp(1px, 0.5vw, 3px); 
             text-transform: uppercase;
-            white-space: nowrap; /* PAKSA TETAP 1 BARIS */
+            white-space: nowrap; 
             
             /* Gradasi Biru Mulus dan Tajam */
             background: linear-gradient(90deg, #002B5B 0%, #0072E3 40%, #00C2FF 70%, #00E5FF 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 30px rgba(0, 122, 227, 0.4)); /* Efek cahaya berbobot */
+            /* Bayangan teks agar terlihat di foto tanpa kotak hitam */
+            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.9));
             margin-bottom: 30px;
         }
 
@@ -87,8 +79,9 @@
         .divider-line {
             width: clamp(50px, 15vw, 120px);
             height: 2px;
-            background: linear-gradient(90deg, transparent, #0072E3, transparent);
+            background: linear-gradient(90deg, transparent, #00C2FF, transparent);
             margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 194, 255, 0.5);
         }
 
         /* Hak Cipta */
@@ -96,8 +89,9 @@
             font-size: clamp(0.65rem, 2vw, 0.85rem);
             letter-spacing: clamp(3px, 1vw, 6px);
             text-transform: uppercase;
-            color: #4A7BA8;
-            font-weight: 300;
+            color: #ffffff; 
+            font-weight: 400;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.9);
         }
 
         /* BAGIAN BAWAH (Menu Horizontal Rapi) */
@@ -105,8 +99,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: clamp(15px, 5vw, 50px); /* Jarak menu otomatis menyesuaikan layar */
-            flex-wrap: wrap; /* Aman jika layar sangat sempit */
+            gap: clamp(15px, 5vw, 50px); 
+            flex-wrap: wrap; 
             width: 100%;
             padding-top: 20px;
         }
@@ -117,14 +111,15 @@
             font-size: clamp(0.7rem, 2.2vw, 0.9rem);
             letter-spacing: clamp(2px, 0.5vw, 4px);
             text-transform: uppercase;
-            font-weight: 500; /* Menu juga sedikit lebih tegas */
-            color: #5A9BD4; /* Biru redup */
+            font-weight: 500; 
+            color: #ffffff; 
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.9);
         }
 
-        /* Efek Hover Berkelas (Garis Bawah Meluncir) */
+        /* Efek Hover Berkelas */
         .menu-item::after {
             content: '';
             position: absolute;
@@ -134,10 +129,11 @@
             height: 2px;
             background: linear-gradient(90deg, #00C2FF, #00E5FF);
             transition: width 0.3s ease;
+            box-shadow: 0 0 10px #00C2FF;
         }
 
         .menu-item:hover {
-            color: #00E5FF; /* Biru terang saat disorot */
+            color: #00E5FF; 
         }
 
         .menu-item:hover::after {
@@ -148,10 +144,7 @@
 </head>
 <body>
 
-    <!-- Latar Cahaya Organik -->
-    <div class="ambient-glow"></div>
-
-    <!-- Konten Utama -->
+    <!-- Konten Utama (Latar belakang langsung di body) -->
     <div class="main-container">
         
         <!-- Bagian Tengah: Judul & Hak Cipta -->
