@@ -6,7 +6,7 @@
     <title>Integrasi Dasbor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Outfit:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -19,15 +19,12 @@
             width: 100%;
             overflow: hidden; /* TIDAK ADA SCROLL */
             
-            /* GAMBAR DIMASUKKAN */
-            background-image: url('https://z-cdn-media.chatglm.cn/files/144bee18-c05e-4f79-a279-d6b536688571.jpeg?auth_key=1887161768-0aed0db43a4e4ee4b0e5f17f82232796-0-3d20dc92ad0c06bbc0a6d9564a2fc28b');
-            
-            /* DI LEBARIN KE SAMPING 100%, TIDAK DIBESARKAN (ZOOM), TIDAK KEPOTONG */
-            background-size: 100% 100%; 
-            
+            /* MEMASUKKAN GAMBAR BARU ANDA */
+            background-image: url('https://z-cdn-media.chatglm.cn/files/a0fe9c01-2ac1-4d6a-8b9d-12fbf218e7af.jpeg?auth_key=1887163107-13e9e42b53fb45e0b542c8231d2f412b-0-62a5c68ca73daf96291eed30d02b3328');
+            background-size: 100% 100%; /* DILEBARIN KE SAMPING, MEMNUHI LAYAR, TANPA SISA HITAM */
             background-position: center;
             background-repeat: no-repeat;
-            background-color: #000; /* Hanya fallback sebelum gambar muat */
+            background-color: #000; /* Hanya fallback */
             
             font-family: 'Outfit', sans-serif;
         }
@@ -37,7 +34,7 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Membagi judul ke tengah, menu ke bawah */
+            justify-content: space-between; /* Judul tengah, menu bawah */
             align-items: center;
             padding: 50px 20px;
             position: relative;
@@ -55,7 +52,7 @@
             width: 100%;
         }
 
-        /* FORMAT KALIMAT JUDUL */
+        /* JUDUL: TEBAL, 1 BARIS, GRADASI BIRU */
         h1 {
             font-family: 'Sora', sans-serif;
             font-weight: 800; 
@@ -65,17 +62,15 @@
             text-transform: uppercase;
             white-space: nowrap; 
             
-            /* Gradasi Biru Mulus dan Tajam */
             background: linear-gradient(90deg, #002B5B 0%, #0072E3 40%, #00C2FF 70%, #00E5FF 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            /* Bayangan teks agar terlihat di foto tanpa kotak hitam */
-            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.9));
+            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.9)); /* Bayangan agar kontras di foto */
             margin-bottom: 30px;
         }
 
-        /* Garis Pemisah Tipis */
+        /* Garis Pemisah */
         .divider-line {
             width: clamp(50px, 15vw, 120px);
             height: 2px;
@@ -84,23 +79,23 @@
             box-shadow: 0 2px 10px rgba(0, 194, 255, 0.5);
         }
 
-        /* Hak Cipta */
+        /* KALIMAT HAK CIPTA PENDEK & PROFESIONAL */
         .copyright {
-            font-size: clamp(0.65rem, 2vw, 0.85rem);
-            letter-spacing: clamp(3px, 1vw, 6px);
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            letter-spacing: clamp(1px, 0.5vw, 3px);
             text-transform: uppercase;
             color: #ffffff; 
             font-weight: 400;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.9); /* Bayangan gelap di belakang teks */
         }
 
-        /* BAGIAN BAWAH (Menu Horizontal Rapi) */
+        /* BAGIAN BAWAH (4 Daftar Menu) */
         .bottom-menu {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: clamp(15px, 5vw, 50px); 
-            flex-wrap: wrap; 
+            gap: clamp(20px, 6vw, 50px);
+            flex-wrap: wrap;
             width: 100%;
             padding-top: 20px;
         }
@@ -108,22 +103,23 @@
         .menu-item {
             text-decoration: none;
             font-family: 'Outfit', sans-serif;
-            font-size: clamp(0.7rem, 2.2vw, 0.9rem);
+            font-size: clamp(0.75rem, 2.2vw, 0.95rem);
             letter-spacing: clamp(2px, 0.5vw, 4px);
             text-transform: uppercase;
-            font-weight: 500; 
+            font-weight: 500;
             color: #ffffff; 
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
+            padding: 10px 0;
             text-shadow: 0 2px 10px rgba(0,0,0,0.9);
         }
 
-        /* Efek Hover Berkelas */
+        /* Efek Hover Garis Bawah */
         .menu-item::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
             width: 0%;
             height: 2px;
@@ -144,7 +140,7 @@
 </head>
 <body>
 
-    <!-- Konten Utama (Latar belakang langsung di body) -->
+    <!-- Konten Utama -->
     <div class="main-container">
         
         <!-- Bagian Tengah: Judul & Hak Cipta -->
@@ -152,15 +148,15 @@
             <h1>INTEGRASI DASBOR</h1>
             
             <div class="divider-line"></div>
-            <div class="copyright">Hak Cipta &copy; 2024</div>
+            <div class="copyright">© 2026 Integrasi Dasbor. Hak Cipta Dilindungi Undang-Undang.</div>
         </div>
 
-        <!-- Bagian Bawah: Daftar Menu Rapi -->
+        <!-- Bagian Bawah: 4 Daftar Menu -->
         <nav class="bottom-menu">
             <a href="#" class="menu-item">Beranda</a>
-            <a href="#" class="menu-item">Analitik</a>
-            <a href="#" class="menu-item">Sistem</a>
-            <a href="#" class="menu-item">Profil</a>
+            <a href="#" class="menu-item">Galeri</a>
+            <a href="#" class="menu-item">Arsip</a>
+            <a href="#" class="menu-item">Kartu ID</a>
         </nav>
 
     </div>
