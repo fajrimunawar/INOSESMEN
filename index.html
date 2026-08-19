@@ -6,7 +6,7 @@
     <title>Integrasi Dasbor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Outfit:wght@300;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -20,23 +20,32 @@
             overflow: hidden; /* TIDAK ADA SCROLL */
             background: #01030A; /* Latar hitam kebiruan pekat */
             font-family: 'Outfit', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
         }
 
-        /* Cahaya Latar Belakang Biru Halus */
+        .main-container {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Membagi judul ke tengah, menu ke bawah */
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Cahaya Latar Organik */
         .ambient-glow {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 900px;
-            height: 900px;
-            background: radial-gradient(circle, rgba(0, 98, 210, 0.12) 0%, transparent 65%);
+            width: 90vmin; /* Menggunakan vmin agar menyesuaikan layar terkecil */
+            height: 90vmin;
+            background: radial-gradient(circle, rgba(0, 86, 210, 0.12) 0%, transparent 60%);
             z-index: 1;
             animation: breathe 10s infinite ease-in-out;
+            pointer-events: none;
         }
 
         @keyframes breathe {
@@ -44,131 +53,144 @@
             50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
         }
 
-        /* Tata Letak Judul di Tengah */
-        .content-wrapper {
-            position: relative;
-            z-index: 10;
+        /* BAGIAN TENGAH (Judul & Hak Cipta) */
+        .center-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
             width: 100%;
-            padding: 0 120px 0 40px; /* Memberi ruang untuk menu kanan */
         }
 
-        /* JUDUL: 1 GARIS DENGAN GRADASI BIRU KELAS ATAS */
-        h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(1.8rem, 5.5vw, 4.5rem); /* Otomatis mengecil agar PASTI 1 baris */
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        /* FORMAT KALIMAT JUDUL (Dijamin 1 Baris & Rapi di semua layar) */
+        .title-row {
+            display: flex;
+            align-items: baseline; /* Sejajar di garis dasar bawah */
+            justify-content: center;
             white-space: nowrap; /* PAKSA TETAP 1 BARIS */
+            margin-bottom: 30px;
+        }
+
+        /* Kata 1: Integrasi (Miring, Rongga/Outline) */
+        .word-1 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(1.2rem, 5.5vw, 4.5rem); /* Ukuran adaptif super aman */
+            color: transparent;
+            -webkit-text-stroke: 1px #4080D0; /* Garis luar biru */
+            text-transform: capitalize;
+            margin-right: clamp(8px, 2vw, 20px); /* Jaga jarak agar tidak nimpa */
+        }
+
+        /* Kata 2: Dasbor (Tebal, Masif, Gradasi Biru Tajam) */
+        .word-2 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.8rem, 8vw, 6.5rem); /* Ukuran adaptif super aman */
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            line-height: 0.9;
             
-            /* Gradasi Biru Tajam */
-            background: linear-gradient(90deg, #002B5B 0%, #0072E3 40%, #00C2FF 80%, #00E5FF 100%);
+            /* Gradasi Biru Menyala */
+            background: linear-gradient(180deg, #0047B3 0%, #009BFF 40%, #00E5FF 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 25px rgba(0, 122, 227, 0.3));
-            margin-bottom: 40px;
+            filter: drop-shadow(0 0 30px rgba(0, 122, 227, 0.4));
         }
 
-        /* Garis Pemisah Minimalis */
-        .divider {
-            width: 80px;
-            height: 2px;
+        /* Garis Pemisah Tipis */
+        .divider-line {
+            width: clamp(50px, 15vw, 120px);
+            height: 1px;
             background: linear-gradient(90deg, transparent, #0072E3, transparent);
-            margin: 0 auto 30px auto;
+            margin-bottom: 20px;
         }
 
-        /* Hak Cipta di Bawah Judul */
+        /* Hak Cipta */
         .copyright {
-            font-size: 0.8rem;
-            letter-spacing: 6px;
+            font-size: clamp(0.65rem, 2vw, 0.85rem);
+            letter-spacing: clamp(3px, 1vw, 6px); /* Spacing menyesuaikan layar */
             text-transform: uppercase;
             color: #4A7BA8;
             font-weight: 300;
         }
 
-        /* DESAIN DAFTAR MENU VERTIKAL (BEDA & BERKELAS) */
-        .vertical-menu {
-            position: absolute;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 20;
+        /* BAGIAN BAWAH (Menu Horizontal Rapi) */
+        .bottom-menu {
             display: flex;
-            flex-direction: column;
-            gap: 35px;
-            border-left: 1px solid rgba(0, 114, 227, 0.2); /* Garis tipis penghubung */
-            padding-left: 25px;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(15px, 5vw, 50px); /* Jarak menu otomatis menyesuaikan layar */
+            flex-wrap: wrap; /* Jika layar sangat kecil, akan turun ke bawah dengan rapi */
+            width: 100%;
+            padding-top: 20px;
         }
 
         .menu-item {
-            writing-mode: vertical-rl; /* Teks berjalan dari atas ke bawah */
-            text-orientation: mixed;
             text-decoration: none;
-            font-size: 0.85rem;
-            letter-spacing: 5px;
+            font-size: clamp(0.7rem, 2.2vw, 0.9rem);
+            letter-spacing: clamp(2px, 0.5vw, 4px);
             text-transform: uppercase;
             font-weight: 400;
-            color: #5A9BD4; /* Warna biru redup */
-            transition: all 0.3s ease-in-out;
+            color: #5A9BD4; /* Biru redup */
+            transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
         }
 
-        /* Efek Hover Sangat Berkelas */
+        /* Efek Hover Berkelas (Garis Bawah Meluncir) */
+        .menu-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background: linear-gradient(90deg, #00C2FF, #00E5FF);
+            transition: width 0.3s ease;
+        }
+
         .menu-item:hover {
-            color: transparent;
-            background: linear-gradient(180deg, #00C2FF 0%, #00E5FF 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            transform: translateX(-5px); /* Sedikit bergeser ke kiri */
-            text-shadow: 0 0 10px rgba(0, 194, 255, 0.4);
+            color: #00E5FF; /* Biru terang */
         }
 
-        /* Responsif untuk Layar Kecil (HP) */
-        @media (max-width: 768px) {
-            .content-wrapper {
-                padding: 0 80px 0 20px; /* Menyesuaikan ruang menu */
-            }
-            h1 {
-                letter-spacing: 1px;
-                margin-bottom: 30px;
-            }
-            .vertical-menu {
-                right: 20px;
-                gap: 25px;
-                padding-left: 15px;
-            }
-            .menu-item {
-                font-size: 0.7rem;
-                letter-spacing: 3px;
-            }
-            .copyright {
-                font-size: 0.65rem;
-                letter-spacing: 4px;
-            }
+        .menu-item:hover::after {
+            width: 100%;
         }
 
     </style>
 </head>
 <body>
 
-    <!-- Latar Organik -->
+    <!-- Latar Cahaya Organik -->
     <div class="ambient-glow"></div>
 
-    <!-- Daftar Menu Vertikal di Tepi Kanan -->
-    <nav class="vertical-menu">
-        <a href="#" class="menu-item">Beranda</a>
-        <a href="#" class="menu-item">Analitik</a>
-        <a href="#" class="menu-item">Sistem</a>
-        <a href="#" class="menu-item">Profil</a>
-    </nav>
-
-    <!-- Konten Utama Murni -->
-    <div class="content-wrapper">
-        <h1>INTEGRASI DASBOR</h1>
+    <!-- Konten Utama -->
+    <div class="main-container">
         
-        <div class="divider"></div>
-        <div class="copyright">Hak Cipta &copy; 2024</div>
+        <!-- Bagian Tengah: Judul & Hak Cipta -->
+        <div class="center-content">
+            <div class="title-row">
+                <span class="word-1">Integrasi</span>
+                <span class="word-2">Dasbor</span>
+            </div>
+            
+            <div class="divider-line"></div>
+            <div class="copyright">Hak Cipta &copy; 2024</div>
+        </div>
+
+        <!-- Bagian Bawah: Daftar Menu Rapi -->
+        <nav class="bottom-menu">
+            <a href="#" class="menu-item">Beranda</a>
+            <a href="#" class="menu-item">Analitik</a>
+            <a href="#" class="menu-item">Sistem</a>
+            <a href="#" class="menu-item">Profil</a>
+        </nav>
+
     </div>
 
 </body>
