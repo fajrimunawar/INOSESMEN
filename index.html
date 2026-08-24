@@ -170,14 +170,14 @@
 
         /* ===================== PUSAT UTAMA ===================== */
         .pusat-section {
-            min-height: 100vh; width: 100%;
+            width: 100%;
             background: #020408;
             position: relative; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 60px 5% 50px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 0;
+            /* Tinggi dihitung otomatis dari konten, tanpa min-height */
         }
 
-        /* Garis vertikal tengah */
         .connector-line {
             position: absolute;
             left: 50%; top: 0; bottom: 0;
@@ -186,12 +186,11 @@
             pointer-events: none;
         }
 
-        /* === JUDUL "PUSAT UTAMA" — BESAR, BERWIBAWA, KELAS TINGGI === */
+        /* === JUDUL BESAR "PUSAT UTAMA" === */
         .pusat-heading {
             position: relative; z-index: 2;
             text-align: center;
-            margin-bottom: 50px;
-            padding-top: 20px;
+            padding: 50px 20px 30px;
         }
 
         .pusat-heading .heading-deco-top {
@@ -246,10 +245,11 @@
             width: 100%; max-width: 1000px;
             display: flex; flex-direction: column;
             position: relative; z-index: 2;
+            padding-bottom: 40px;
         }
 
         .pusat-item {
-            padding: 36px 0;
+            padding: 30px 0;
             cursor: pointer;
             position: relative;
             transition: all 0.5s ease;
@@ -257,7 +257,6 @@
         }
         .pusat-item:last-child { border-bottom: none; }
 
-        /* Nomor besar transparan di belakang */
         .pusat-item .num {
             font-family: 'Sora', sans-serif; font-weight: 800;
             font-size: clamp(4rem, 12vw, 9rem);
@@ -281,7 +280,6 @@
         .pusat-item:nth-child(2) .pusat-inner { align-items: center; text-align: center; }
         .pusat-item:nth-child(3) .pusat-inner { align-items: flex-end; text-align: right; }
 
-        /* Judul item — ukuran proporsional */
         .pusat-name {
             font-family: 'Sora', sans-serif; font-weight: 800;
             font-size: clamp(1.5rem, 4vw, 2.8rem);
@@ -295,9 +293,8 @@
             letter-spacing: 5px;
         }
 
-        /* Garis aksen variasi arah */
         .pusat-accent {
-            height: 2px; margin-top: 14px;
+            height: 2px; margin-top: 12px;
             transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             width: 0;
         }
@@ -315,7 +312,6 @@
         }
         .pusat-item:hover .pusat-accent { width: clamp(60px, 15vw, 140px); }
 
-        /* Titik konektor */
         .dot-connector {
             position: absolute;
             left: 50%; transform: translateX(-50%);
@@ -372,7 +368,6 @@
     <section class="pusat-section" id="pusat">
         <div class="connector-line"></div>
 
-        <!-- JUDUL BESAR "PUSAT UTAMA" -->
         <div class="pusat-heading">
             <div class="heading-deco-top">
                 <span></span>
@@ -387,7 +382,6 @@
             </div>
         </div>
 
-        <!-- 3 ITEM JUDUL -->
         <div class="pusat-list">
             <div class="pusat-item">
                 <span class="num">01</span>
@@ -418,7 +412,6 @@
     </section>
 
     <script>
-        // Kunci scroll saat loading
         (function() {
             function preventScroll(e) {
                 if (!document.body.classList.contains('loaded')) {
@@ -438,7 +431,6 @@
             }, { passive: false });
         })();
 
-        // Animasi background preloader
         (function() {
             var pre = document.getElementById('preloader');
             for (var i = 0; i < 18; i++) {
@@ -477,7 +469,6 @@
             }
         })();
 
-        // Scramble loading
         window.addEventListener('load', function() {
             var target = 'INFOTRINK';
             var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
