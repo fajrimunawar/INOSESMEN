@@ -9,16 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Outfit:wght@300;400;500;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         html { scroll-behavior: smooth; }
 
         body {
             width: 100%;
             overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: hidden;
             background-color: #000;
             font-family: 'Outfit', sans-serif;
         }
+        body.loaded { overflow-y: auto; }
 
         /* ===================== PRELOADER ===================== */
         #preloader {
@@ -37,8 +37,7 @@
 
         #preloader::before {
             content: '';
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background-image:
                 linear-gradient(rgba(0,160,255,0.04) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0,160,255,0.04) 1px, transparent 1px);
@@ -152,7 +151,6 @@
             text-transform: none; color: rgba(255,255,255,0.45); font-weight: 300;
             text-shadow: 0 1px 4px rgba(0,0,0,0.7);
         }
-
         .hero-menu {
             display: flex; align-items: center; justify-content: center; width: 100%; padding-top: 20px;
         }
@@ -176,42 +174,82 @@
             background: #020408;
             position: relative; overflow: hidden;
             display: flex; flex-direction: column; align-items: center;
-            padding: 80px 5% 60px;
+            padding: 60px 5% 50px;
         }
 
-        /* Garis vertikal penghubung */
+        /* Garis vertikal tengah */
         .connector-line {
             position: absolute;
             left: 50%; top: 0; bottom: 0;
             width: 1px;
-            background: linear-gradient(180deg, transparent 0%, rgba(0,140,255,0.15) 20%, rgba(0,140,255,0.15) 80%, transparent 100%);
+            background: linear-gradient(180deg, transparent 0%, rgba(0,140,255,0.1) 10%, rgba(0,140,255,0.1) 90%, transparent 100%);
             pointer-events: none;
         }
 
-        .pusat-title {
-            font-family: 'Sora', sans-serif; font-weight: 800;
-            font-size: clamp(0.7rem, 1.5vw, 0.85rem);
-            letter-spacing: 6px; text-transform: uppercase;
-            color: rgba(0, 194, 255, 0.5);
-            margin-bottom: 70px;
+        /* === JUDUL "PUSAT UTAMA" — BESAR, BERWIBAWA, KELAS TINGGI === */
+        .pusat-heading {
             position: relative; z-index: 2;
-        }
-        .pusat-title::after {
-            content: ''; display: block;
-            width: 30px; height: 1px;
-            background: rgba(0, 194, 255, 0.3);
-            margin: 12px auto 0;
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 20px;
         }
 
+        .pusat-heading .heading-deco-top {
+            display: flex; align-items: center; justify-content: center; gap: 14px;
+            margin-bottom: 18px;
+        }
+        .pusat-heading .heading-deco-top span {
+            width: 50px; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,194,255,0.35));
+        }
+        .pusat-heading .heading-deco-top span:last-child {
+            background: linear-gradient(90deg, rgba(0,194,255,0.35), transparent);
+        }
+        .pusat-heading .heading-deco-top .deco-diamond {
+            width: 6px; height: 6px;
+            background: rgba(0,194,255,0.4);
+            transform: rotate(45deg);
+            flex-shrink: 0;
+        }
+
+        .pusat-heading h2 {
+            font-family: 'Sora', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2.4rem, 7vw, 5rem);
+            letter-spacing: clamp(6px, 2vw, 20px);
+            text-transform: uppercase;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #00E5FF 0%, #0080FF 40%, #003D99 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(0,150,255,0.2)) drop-shadow(0 0 60px rgba(0,100,255,0.08));
+        }
+
+        .pusat-heading .heading-deco-bottom {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-top: 16px;
+        }
+        .pusat-heading .heading-deco-bottom span {
+            width: 3px; height: 3px;
+            border-radius: 50%;
+            background: rgba(0,194,255,0.3);
+        }
+        .pusat-heading .heading-deco-bottom span:nth-child(2) {
+            width: 20px; height: 1px;
+            border-radius: 0;
+            background: linear-gradient(90deg, transparent, rgba(0,194,255,0.25), transparent);
+        }
+
+        /* === LIST 3 ITEM === */
         .pusat-list {
             width: 100%; max-width: 1000px;
             display: flex; flex-direction: column;
-            gap: 0; position: relative; z-index: 2;
+            position: relative; z-index: 2;
         }
 
-        /* === TIAP PUSAT === */
         .pusat-item {
-            padding: 50px 0;
+            padding: 36px 0;
             cursor: pointer;
             position: relative;
             transition: all 0.5s ease;
@@ -219,6 +257,7 @@
         }
         .pusat-item:last-child { border-bottom: none; }
 
+        /* Nomor besar transparan di belakang */
         .pusat-item .num {
             font-family: 'Sora', sans-serif; font-weight: 800;
             font-size: clamp(4rem, 12vw, 9rem);
@@ -229,45 +268,36 @@
             pointer-events: none;
             transition: opacity 0.5s ease;
         }
-
-        /* Variasi posisi nomor */
         .pusat-item:nth-child(1) .num { left: -2%; top: 50%; transform: translateY(-50%); }
         .pusat-item:nth-child(2) .num { left: 50%; top: 50%; transform: translate(-50%, -50%); }
         .pusat-item:nth-child(3) .num { right: -2%; top: 50%; transform: translateY(-50%); }
-
         .pusat-item:hover .num { opacity: 0.07; }
 
         .pusat-inner {
             display: flex; flex-direction: column;
             position: relative; z-index: 2;
         }
-
-        /* Variasi alignment */
         .pusat-item:nth-child(1) .pusat-inner { align-items: flex-start; text-align: left; }
         .pusat-item:nth-child(2) .pusat-inner { align-items: center; text-align: center; }
         .pusat-item:nth-child(3) .pusat-inner { align-items: flex-end; text-align: right; }
 
+        /* Judul item — ukuran proporsional */
         .pusat-name {
             font-family: 'Sora', sans-serif; font-weight: 800;
-            font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+            font-size: clamp(1.5rem, 4vw, 2.8rem);
             letter-spacing: 3px; text-transform: uppercase;
-            color: rgba(255,255,255,0.85);
-            transition: color 0.4s ease;
+            color: rgba(255,255,255,0.8);
+            transition: color 0.4s ease, letter-spacing 0.5s ease;
             line-height: 1.2;
         }
-
-        .pusat-sub {
-            font-size: clamp(0.72rem, 1.3vw, 0.82rem);
-            letter-spacing: 1.5px; text-transform: uppercase;
-            color: rgba(255,255,255,0.25);
-            margin-top: 12px;
-            font-weight: 400;
-            transition: color 0.4s ease;
+        .pusat-item:hover .pusat-name {
+            color: #ffffff;
+            letter-spacing: 5px;
         }
 
-        /* Garis aksen bawah nama — variasi arah */
+        /* Garis aksen variasi arah */
         .pusat-accent {
-            height: 2px; margin-top: 16px;
+            height: 2px; margin-top: 14px;
             transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             width: 0;
         }
@@ -283,24 +313,25 @@
             background: linear-gradient(270deg, #0050CC, transparent);
             align-self: flex-end;
         }
+        .pusat-item:hover .pusat-accent { width: clamp(60px, 15vw, 140px); }
 
-        .pusat-item:hover .pusat-accent { width: clamp(80px, 20vw, 180px); }
-        .pusat-item:hover .pusat-name { color: #ffffff; }
-        .pusat-item:hover .pusat-sub { color: rgba(255,255,255,0.45); }
-
-        /* Titik kecil di garis konektor */
+        /* Titik konektor */
         .dot-connector {
             position: absolute;
             left: 50%; transform: translateX(-50%);
             width: 5px; height: 5px;
             border-radius: 50%;
-            background: rgba(0, 140, 255, 0.2);
-            pointer-events: none;
-            z-index: 1;
+            background: rgba(0, 140, 255, 0.15);
+            pointer-events: none; z-index: 1;
+            transition: all 0.4s ease;
         }
         .pusat-item:nth-child(1) .dot-connector { bottom: 0; }
         .pusat-item:nth-child(2) .dot-connector { bottom: 0; }
-
+        .pusat-item:hover .dot-connector {
+            background: rgba(0,194,255,0.5);
+            box-shadow: 0 0 10px rgba(0,194,255,0.3);
+            transform: translateX(-50%) scale(1.5);
+        }
     </style>
 </head>
 <body>
@@ -341,15 +372,28 @@
     <section class="pusat-section" id="pusat">
         <div class="connector-line"></div>
 
-        <div class="pusat-title">Pusat Utama</div>
+        <!-- JUDUL BESAR "PUSAT UTAMA" -->
+        <div class="pusat-heading">
+            <div class="heading-deco-top">
+                <span></span>
+                <div class="deco-diamond"></div>
+                <span></span>
+            </div>
+            <h2>Pusat Utama</h2>
+            <div class="heading-deco-bottom">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
 
+        <!-- 3 ITEM JUDUL -->
         <div class="pusat-list">
             <div class="pusat-item">
                 <span class="num">01</span>
                 <div class="dot-connector"></div>
                 <div class="pusat-inner">
                     <div class="pusat-name">Media Digital</div>
-                    <div class="pusat-sub">Aktivitas dan karya dalam lingkungan komunikasi digital</div>
                     <div class="pusat-accent"></div>
                 </div>
             </div>
@@ -359,7 +403,6 @@
                 <div class="dot-connector"></div>
                 <div class="pusat-inner">
                     <div class="pusat-name">Pembangunan</div>
-                    <div class="pusat-sub">Proses menciptakan dan mengembangkan berbagai usaha maupun inisiatif</div>
                     <div class="pusat-accent"></div>
                 </div>
             </div>
@@ -368,7 +411,6 @@
                 <span class="num">03</span>
                 <div class="pusat-inner">
                     <div class="pusat-name">Karya Ilmiah</div>
-                    <div class="pusat-sub">Pengetahuan, penelitian, dan karya akademik</div>
                     <div class="pusat-accent"></div>
                 </div>
             </div>
@@ -376,6 +418,26 @@
     </section>
 
     <script>
+        // Kunci scroll saat loading
+        (function() {
+            function preventScroll(e) {
+                if (!document.body.classList.contains('loaded')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
+            document.addEventListener('wheel', preventScroll, { passive: false });
+            document.addEventListener('touchmove', preventScroll, { passive: false });
+            document.addEventListener('keydown', function(e) {
+                if (!document.body.classList.contains('loaded')) {
+                    if (['ArrowUp','ArrowDown','Space','PageUp','PageDown','Home','End'].indexOf(e.code) > -1) {
+                        e.preventDefault();
+                    }
+                }
+            }, { passive: false });
+        })();
+
         // Animasi background preloader
         (function() {
             var pre = document.getElementById('preloader');
