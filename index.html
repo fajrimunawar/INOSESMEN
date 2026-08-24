@@ -17,31 +17,83 @@
         html, body {
             height: 100%;
             width: 100%;
-            overflow: hidden; /* TIDAK ADA SCROLL */
+            overflow: hidden;
             
-            /* MEMASUKKAN GAMBAR BARU ANDA */
             background-image: url('https://z-cdn-media.chatglm.cn/files/a0fe9c01-2ac1-4d6a-8b9d-12fbf218e7af.jpeg?auth_key=1887163107-13e9e42b53fb45e0b542c8231d2f412b-0-62a5c68ca73daf96291eed30d02b3328');
-            background-size: 100% 100%; /* DILEBARIN KE SAMPING, MEMNUHI LAYAR, TANPA SISA HITAM */
+            background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: #000; /* Hanya fallback */
+            background-color: #000;
             
             font-family: 'Outfit', sans-serif;
         }
 
+        /* === PRELOADER === */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        body.loaded #preloader {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-grid {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 90vw;
+        }
+        .loader-box {
+            width: clamp(50px, 9vw, 75px);
+            height: clamp(50px, 9vw, 75px);
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .loader-box.locked {
+            background: rgba(0, 0, 20, 0.8);
+            transform: translateY(-5px);
+        }
+        .loader-box.box-1.locked { border-color: #00E5FF; color: #00E5FF; }
+        .loader-box.box-2.locked { border-color: #00D4FF; color: #00D4FF; }
+        .loader-box.box-3.locked { border-color: #00C2FF; color: #00C2FF; }
+        .loader-box.box-4.locked { border-color: #00ABFF; color: #00ABFF; }
+        .loader-box.box-5.locked { border-color: #008EFF; color: #008EFF; }
+        .loader-box.box-6.locked { border-color: #0072E3; color: #0072E3; }
+        .loader-box.box-7.locked { border-color: #0054FF; color: #0054FF; }
+        .loader-box.box-8.locked { border-color: #0037FF; color: #0037FF; }
+        .loader-box.box-9.locked { border-color: #002B5B; color: #002B5B; }
+
+        /* === KONTEN UTAMA === */
         .main-container {
             height: 100%;
             width: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Judul tengah, menu bawah */
+            justify-content: space-between;
             align-items: center;
             padding: 50px 20px;
             position: relative;
             z-index: 10;
         }
 
-        /* BAGIAN TENGAH (Judul & Hak Cipta) */
         .center-content {
             flex: 1;
             display: flex;
@@ -52,7 +104,6 @@
             width: 100%;
         }
 
-        /* JUDUL: TEBAL, 1 BARIS, GRADASI BIRU */
         h1 {
             font-family: 'Sora', sans-serif;
             font-weight: 800; 
@@ -66,11 +117,10 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.9)); /* Bayangan agar kontras di foto */
+            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.9));
             margin-bottom: 30px;
         }
 
-        /* Garis Pemisah */
         .divider-line {
             width: clamp(50px, 15vw, 120px);
             height: 2px;
@@ -79,17 +129,15 @@
             box-shadow: 0 2px 10px rgba(0, 194, 255, 0.5);
         }
 
-        /* KALIMAT HAK CIPTA PENDEK & PROFESIONAL */
         .copyright {
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
-            letter-spacing: clamp(1px, 0.5vw, 3px);
-            text-transform: uppercase;
-            color: #ffffff; 
-            font-weight: 400;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.9); /* Bayangan gelap di belakang teks */
+            font-size: clamp(0.65rem, 1.4vw, 0.78rem);
+            letter-spacing: 1.2px;
+            text-transform: none;
+            color: rgba(255, 255, 255, 0.45);
+            font-weight: 300;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
         }
 
-        /* BAGIAN BAWAH (4 Daftar Menu) */
         .bottom-menu {
             display: flex;
             justify-content: center;
@@ -115,7 +163,6 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.9);
         }
 
-        /* Efek Hover Garis Bawah */
         .menu-item::after {
             content: '';
             position: absolute;
@@ -140,10 +187,24 @@
 </head>
 <body>
 
-    <!-- Konten Utama -->
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-grid">
+            <div class="loader-box box-1"></div>
+            <div class="loader-box box-2"></div>
+            <div class="loader-box box-3"></div>
+            <div class="loader-box box-4"></div>
+            <div class="loader-box box-5"></div>
+            <div class="loader-box box-6"></div>
+            <div class="loader-box box-7"></div>
+            <div class="loader-box box-8"></div>
+            <div class="loader-box box-9"></div>
+        </div>
+    </div>
+
+    <!-- KONTEN UTAMA -->
     <div class="main-container">
         
-        <!-- Bagian Tengah: Judul & Hak Cipta -->
         <div class="center-content">
             <h1>INTEGRASI DASBOR</h1>
             
@@ -151,16 +212,43 @@
             <div class="copyright">© 2026 Integrasi Dasbor. Hak Cipta Dilindungi Undang-Undang.</div>
         </div>
 
-        <!-- Bagian Bawah: 4 Daftar Menu -->
         <nav class="bottom-menu">
             <a href="#" class="menu-item">Beranda</a>
             <a href="#" class="menu-item">Galeri</a>
             <a href="#" class="menu-item">Arsip</a>
-            <a href="#" class="menu-item">Publikasi</a>
-            <a href="#" class="menu-item">Informasi</a>
         </nav>
 
     </div>
+
+    <script>
+        // === LOADING SCREEN SCRAMBLE ===
+        window.addEventListener('load', function() {
+            const target = "INTEGRASI";
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            const boxes = document.querySelectorAll('.loader-box');
+            let lockIndex = 0;
+            const intervals = [];
+            boxes.forEach(function(box) {
+                intervals.push(setInterval(function() {
+                    box.textContent = chars[Math.floor(Math.random() * chars.length)];
+                }, 50));
+            });
+            function lockNextBox() {
+                if (lockIndex < target.length) {
+                    clearInterval(intervals[lockIndex]);
+                    boxes[lockIndex].textContent = target[lockIndex];
+                    boxes[lockIndex].classList.add('locked');
+                    lockIndex++;
+                    setTimeout(lockNextBox, 300);
+                } else {
+                    setTimeout(function() {
+                        document.body.classList.add('loaded');
+                    }, 1000);
+                }
+            }
+            setTimeout(lockNextBox, 500);
+        });
+    </script>
 
 </body>
 </html>
