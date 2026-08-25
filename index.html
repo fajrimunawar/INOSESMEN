@@ -91,13 +91,15 @@
 
         /* ===================== HERO ===================== */
         .hero {
-            height: 100vh; width: 100%;
+            height: 100vh;
+            height: 100dvh; /* Tambahan: Cuma ini yang membuat menu tidak kelewatan di HP */
+            width: 100%;
             background-image: url('https://z-cdn-media.chatglm.cn/files/a0fe9c01-2ac1-4d6a-8b9d-12fbf218e7af.jpeg?auth_key=1887163107-13e9e42b53fb45e0b542c8231d2f412b-0-62a5c68ca73daf96291eed30d02b3328');
             background-size: 100% 100%; background-position: center; background-repeat: no-repeat;
             display: flex; flex-direction: column; justify-content: space-between; align-items: center;
             padding: 50px 20px; position: relative; z-index: 10;
         }
-        .hero-center { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; width: 100%; }
+        .hero-center { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; width: 100%; flex-shrink: 0; }
         .hero h1 {
             font-family: 'Sora', sans-serif; font-weight: 800;
             font-size: clamp(1.4rem, 6.5vw, 5.5rem); line-height: 1.1;
@@ -108,7 +110,9 @@
         }
         .divider-line { width: clamp(50px, 15vw, 120px); height: 2px; background: linear-gradient(90deg, transparent, #00C2FF, transparent); margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,194,255,0.5); }
         .copyright { font-size: clamp(0.65rem, 1.4vw, 0.78rem); letter-spacing: 1.2px; text-transform: none; color: rgba(255,255,255,0.45); font-weight: 300; text-shadow: 0 1px 4px rgba(0,0,0,0.7); }
-        .hero-menu { display: flex; align-items: center; justify-content: center; width: 100%; padding-top: 20px; }
+        
+        /* Tambahan flex-shrink: 0 di menu agar tidak tertekan keluar layar */
+        .hero-menu { display: flex; align-items: center; justify-content: center; width: 100%; padding-top: 20px; flex-shrink: 0; flex-wrap: wrap; gap: 10px; }
         .menu-item { text-decoration: none; font-family: 'Outfit', sans-serif; font-size: clamp(0.72rem, 1.5vw, 0.85rem); letter-spacing: 2.5px; text-transform: uppercase; font-weight: 400; color: rgba(255,255,255,0.55); padding: 10px 0; cursor: pointer; transition: color 0.4s ease; text-shadow: 0 1px 6px rgba(0,0,0,0.8); }
         .menu-item:hover { color: #00C2FF; }
         .menu-sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.2); margin: 0 clamp(20px, 4vw, 40px); flex-shrink: 0; }
