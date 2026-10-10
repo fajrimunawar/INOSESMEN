@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noimageindex, noarchive, max-image-preview:none">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' https: data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' https: file: data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests">
 <title>MUHAMMAD FAJRI MUNAWAR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,7 +32,8 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   html { scrollbar-color:#4a3d24 #0b0906; scrollbar-width:thin; scroll-behavior:smooth; }
-  body { min-height:100%; background:#0f0d08; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+  body { min-height:100%; background:#0f0d08; overflow-x:hidden; -webkit-font-smoothing:antialiased;
+         -webkit-text-size-adjust:100%; text-size-adjust:100%; }
 
   ::-webkit-scrollbar { width:10px; }
   ::-webkit-scrollbar-track { background:#0b0906; }
@@ -70,7 +71,7 @@
 
   /* ============ HALAMAN 1 : JUDUL + KICKER + DAFTAR ISI ============ */
   .title-stage {
-    position:relative; min-height:100vh; z-index:5;
+    position:relative; min-height:100vh; min-height:100svh; z-index:5;
     display:grid; place-items:center;
     pointer-events:none; user-select:none;
   }
@@ -319,7 +320,7 @@
   /* ============ HALAMAN 3 ============ */
   .page-three {
     position:relative; z-index:5;
-    min-height:100vh;
+    min-height:100vh; min-height:100svh;
     display:flex; flex-direction:column; justify-content:center;
     padding:clamp(44px, 6vh, 80px) clamp(26px, 4.2vw, 60px) clamp(36px, 5vh, 70px);
   }
@@ -519,7 +520,7 @@
   /* ============ HALAMAN 4 ============ */
   .page-four {
     position:relative; z-index:5;
-    min-height:100vh;
+    min-height:100vh; min-height:100svh;
     display:flex; flex-direction:column; justify-content:center;
     padding:clamp(44px, 6vh, 80px) clamp(26px, 4.2vw, 60px) clamp(36px, 5vh, 70px);
   }
@@ -574,9 +575,8 @@
     color:#efe9d8;
   }
 
-  /* --- BINGKAI FOTO BARU : gaya galeri, elegan & wibawa ---
-     satu bingkai emas tipis + hairline dalam + 4 sudut emas penjuru.
-     Tidak ada lagi bingkai offset ganda yang menjorok keluar. --- */
+  /* --- BINGKAI FOTO : gaya galeri, elegan & wibawa ---
+     satu bingkai emas tipis + hairline dalam + 4 sudut emas penjuru. --- */
   .p4-side { width:100%; min-width:0; }
 
   .p4-fig {
@@ -684,6 +684,7 @@
     font-size:clamp(11.5px, 1.05vw, 14px);
     letter-spacing:.06em; text-transform:uppercase;
     color:#ffffff; line-height:1.45;
+    overflow-wrap:anywhere;
   }
 
   .p4-close {
@@ -734,13 +735,15 @@
   }
 
   /* ============ HALAMAN 5 ============ */
+  /* Tata letak aman: konten tetap di tengah saat layar tinggi,
+     dan TIDAK PERNAH kepotong saat layar pendek. */
   .page-five {
     position:relative; z-index:5;
-    min-height:100vh;
-    display:flex; flex-direction:column; justify-content:center;
-    padding:clamp(44px, 6vh, 80px) clamp(26px, 4.2vw, 60px) clamp(120px, 18vh, 190px);
+    min-height:100vh; min-height:100svh;
+    display:flex; flex-direction:column;
+    padding:clamp(64px, 10vh, 130px) clamp(26px, 4.2vw, 60px) clamp(120px, 18vh, 190px);
   }
-  .p5-wrap { width:100%; }
+  .p5-wrap { width:100%; margin:auto 0; }
 
   .p5-head { margin-bottom:clamp(18px, 3vh, 30px); }
   .p5-head h2 {
@@ -856,13 +859,13 @@
   }
 
   @media (max-height:850px){
-    .page-five { padding-top:clamp(34px, 4.6vh, 56px); padding-bottom:clamp(104px, 15vh, 160px); }
+    .page-five { padding-top:clamp(44px, 6.5vh, 80px); padding-bottom:clamp(104px, 15vh, 160px); }
     .p5-final { margin-top:clamp(26px, 4.5vh, 46px); }
     .p5-quote { font-size:clamp(19px, 2.6vw, 32px); }
   }
 
   @media (max-width:880px){
-    .page-five { padding:clamp(34px, 6vh, 52px) clamp(20px, 5vw, 30px) clamp(112px, 16vh, 150px); }
+    .page-five { padding:clamp(44px, 7vh, 64px) clamp(20px, 5vw, 30px) clamp(112px, 16vh, 150px); }
     .p5-lead { font-size:12.5px; line-height:1.8; }
     .p5-quote { font-size:clamp(18px, 5.4vw, 24px); line-height:1.6; }
     .p5-sig .sname { letter-spacing:.16em; text-indent:.16em; }
@@ -930,7 +933,8 @@
         <div class="photo-col">
           <figure class="shot s1">
             <div class="mat">
-              <img src="https://z-cdn-media.chatglm.cn/files/192aff07-e27c-495d-ac60-54878e05c8d9.jpg?auth_key=1891372242-87149908e72e4b41ae17561c4f30d669-0-62249f1248c545ffb751711004f27dad"
+              <!-- GAMBAR 1 : foto berdiri -->
+              <img src="WhatsApp%20Image%202026-10-10%20at%2015.43.16.jpeg"
                    alt="Muhammad Fajri Munawar" loading="eager" decoding="async">
             </div>
           </figure>
@@ -1027,8 +1031,8 @@
               <i class="c c2" aria-hidden="true"></i>
               <i class="c c3" aria-hidden="true"></i>
               <i class="c c4" aria-hidden="true"></i>
-              <!-- GANTI src di bawah ini dengan foto kamu sendiri -->
-              <img src="https://z-cdn-media.chatglm.cn/files/14799544-4cbd-4a1e-99b0-70f7ac37a1f1.png?auth_key=1891372242-bbde5b8c6f6b4720839041912d4f020e-0-41064341597ed4017e8d46b136c245fc"
+              <!-- GAMBAR 3 : foto duduk di meja -->
+              <img src="WhatsApp%20Image%202026-10-10%20at%2015.42.48.jpeg"
                    alt="Muhammad Fajri Munawar" loading="eager" decoding="async">
             </div>
           </div>
@@ -1093,7 +1097,7 @@
       <div class="crule" aria-hidden="true"></div>
       <p class="ct">
         Hak Cipta © 2026 Muhammad Fajri Munawar<br class="wide">
-        PT JRI Munawar Group Perorangan · Seluruh Hak Cipta Dilindungi
+        Seluruh Hak Cipta Dilindungi Undang-Undang
       </p>
     </footer>
   </section>
@@ -1368,6 +1372,7 @@
 
   let rzT;
   addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(resize, 150); });
+  addEventListener('orientationchange', () => { clearTimeout(rzT); rzT = setTimeout(resize, 250); });
 
   resize();
   if (document.fonts && document.fonts.ready) {
@@ -1380,8 +1385,6 @@
 <script>
 /* ================================================================
    HALAMAN 3 : LINIMASA — script MANDIRI.
-   Semua foto sudah di-preload sejak halaman dibuka (lihat <head>),
-   jadi saat hover kartu + foto langsung MUNCUL TANPA DELAY.
    GANTI nilai img pada EVENTS dengan foto asli milikmu.
    ================================================================ */
 (() => {
@@ -1642,6 +1645,7 @@
 
   placeNav();
   addEventListener('resize', () => setTimeout(placeNav, 60));
+  addEventListener('orientationchange', () => setTimeout(placeNav, 200));
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeNav);
 
   // ---------- perlindungan konten (pencegah) ----------
