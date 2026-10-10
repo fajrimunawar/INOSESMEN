@@ -3,11 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noimageindex">
-<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noimageindex, noarchive, max-image-preview:none">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' https: data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests">
 <title>MUHAMMAD FAJRI MUNAWAR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://z-cdn-media.chatglm.cn">
+<link rel="dns-prefetch" href="https://z-cdn-media.chatglm.cn">
+<link rel="preconnect" href="https://picsum.photos">
+<link rel="dns-prefetch" href="https://picsum.photos">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -891,14 +896,14 @@
           <figure class="shot s1">
             <div class="mat">
               <img src="https://z-cdn-media.chatglm.cn/files/192aff07-e27c-495d-ac60-54878e05c8d9.jpg?auth_key=1891372242-87149908e72e4b41ae17561c4f30d669-0-62249f1248c545ffb751711004f27dad"
-                   alt="Muhammad Fajri Munawar" loading="lazy">
+                   alt="Muhammad Fajri Munawar" loading="eager" decoding="async">
             </div>
           </figure>
 
           <figure class="shot s2">
             <div class="mat">
               <img src="https://z-cdn-media.chatglm.cn/files/14799544-4cbd-4a1e-99b0-70f7ac37a1f1.png?auth_key=1891372242-bbde5b8c6f6b4720839041912d4f020e-0-41064341597ed4017e8d46b136c245fc"
-                   alt="Muhammad Fajri Munawar" loading="lazy">
+                   alt="Muhammad Fajri Munawar" loading="eager" decoding="async">
             </div>
           </figure>
         </div>
@@ -984,7 +989,7 @@
           <div class="mat">
             <!-- GANTI src di bawah ini dengan foto kamu sendiri -->
             <img src="https://z-cdn-media.chatglm.cn/files/14799544-4cbd-4a1e-99b0-70f7ac37a1f1.png?auth_key=1891372242-bbde5b8c6f6b4720839041912d4f020e-0-41064341597ed4017e8d46b136c245fc"
-                 alt="Muhammad Fajri Munawar" loading="lazy">
+                 alt="Muhammad Fajri Munawar" loading="eager" decoding="async">
           </div>
 
           <div class="p4-plaque">
@@ -1569,7 +1574,7 @@
    petunjuk GULIR) sehingga TIDAK PERNAH menabrak garis/elemen lain.
    ================================================================ */
 (() => {
-  // ---------- penempatan presisi daftar isi ----------
+  // ---------- penempatan presisi daftar isi (TANPA DELAY) ----------
   const navEl  = document.getElementById('p1nav');
   const stgEl  = document.getElementById('beranda');
   const stkEl  = document.getElementById('stack');
@@ -1594,8 +1599,6 @@
   placeNav();
   addEventListener('resize', () => setTimeout(placeNav, 60));
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeNav);
-  setTimeout(placeNav, 300);          // penempatan ulang setelah layout & font stabil
-  setTimeout(placeNav, 1200);
 
   // ---------- perlindungan konten (pencegah) ----------
   const stop = e => { e.preventDefault(); return false; };
