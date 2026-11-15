@@ -49,32 +49,97 @@
   /* Marquee animations */
   @keyframes infotrinkMarqueeHero{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
   @keyframes infotrinkMarquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-  @keyframes ifkPulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.07);opacity:1}}
-  @keyframes ifkFlow{to{stroke-dashoffset:-36}}
-  /* Stage card hover (alur perjalanan) */
-  .ifk-shaft{transition:transform .25s ease,box-shadow .25s ease}
-  .ifk-shaft:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(120,100,40,.14)}
-  .ifk-check{transition:background .2s ease;border-radius:10px}
-  .ifk-check:hover{background:rgba(11,110,106,.05)}
   /* Card hover transitions */
   .hover-card{transition:transform .2s ease,box-shadow .2s ease}
   .hover-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(11,59,58,.12)}
   .hover-card-sm{transition:transform .2s ease}
   .hover-card-sm:hover{transform:translateY(-2px)}
-  .btn-telusuri{transition:background .2s ease,transform .2s ease}
-  .btn-telusuri:hover{background:#0B3B3A !important;transform:translateX(2px)}
-  .btn-x{transition:opacity .3s ease,transform .3s ease,background .2s ease}
-  .btn-x:hover{background:#d32f2f !important;transform:scale(1.1) rotate(0deg) !important}
-  .nav-link{transition:all .2s ease}
-  .nav-link:hover{color:#0B6E6A !important}
-  /* Smooth scroll inside container */
-  #container{scroll-behavior:auto}
-  /* Make sure translated brand name is not translated by Google Translate */
-  [translate="no"]{ }
-  /* Prevent layout shift while fonts load */
-  body{font-display:swap}
-  /* SVG arrows for stage labels */
-  .stage-arrow{ }
+
+  /* ===== NAV LINKS (highlight via .on — no re-render needed) ===== */
+  .nav-link{
+    font-family:'Open Sans',sans-serif;font-size:15px;font-weight:600;
+    color:#0B3B3A;text-decoration:none;padding:4px 0;
+    border-bottom:2px solid transparent;letter-spacing:.2px;cursor:pointer;
+    display:inline-block;transition:color .2s ease,border-color .2s ease;
+  }
+  .nav-link:hover{color:#0B6E6A}
+  .nav-link.on{font-weight:700;color:#0B6E6A;border-bottom-color:#0B6E6A}
+
+  /* ===== DAFTAR ISI OVERLAY — persistent in DOM, animated via .open class =====
+     Opening: dot muncul → garis L tergambar (stroke-dashoffset) → kotak putih terbuka
+     (scaleY) → judul & garis pembatas → kartu masuk berurutan (stagger) → tombol X.
+     Closing: semua elemen kembali serentak, overlay disembunyikan setelah 1.6s. */
+  .overlay-menu{position:absolute;inset:0;visibility:hidden;pointer-events:none;transition:visibility 0s linear 1.6s}
+  .overlay-menu.open{visibility:visible;transition-delay:0s}
+  .overlay-menu.open .ov-box,.overlay-menu.open .ov-x{pointer-events:auto}
+  .ov-svg{position:absolute;inset:0;pointer-events:none;z-index:20}
+  .ov-dot-start,.ov-dot-end{
+    fill:#0B6E6A;opacity:0;transform:scale(0);
+    transform-origin:center;transform-box:fill-box;
+    transition:opacity .3s ease,transform .3s ease;
+  }
+  .overlay-menu.open .ov-dot-start{opacity:1;transform:scale(1);transition-delay:.05s}
+  .ov-line{
+    stroke:#0B6E6A;stroke-width:3;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:1;stroke-dashoffset:1;
+    transition:stroke-dashoffset .6s ease;
+  }
+  .overlay-menu.open .ov-line{stroke-dashoffset:0;transition-delay:.1s}
+  .overlay-menu.open .ov-dot-end{opacity:1;transform:scale(1);transition-delay:.5s}
+  .ov-box{
+    position:absolute;left:70px;top:150px;width:1140px;height:530px;
+    background:rgba(255,255,255,0.97);border-radius:0 0 16px 16px;
+    box-shadow:0 8px 32px rgba(11,59,58,0.18);z-index:15;
+    padding:36px 44px;overflow:hidden;
+    opacity:0;transform:scaleY(0);transform-origin:center top;
+    transition:opacity .45s ease,transform .45s ease;
+  }
+  .overlay-menu.open .ov-box{opacity:1;transform:scaleY(1);transition-delay:.5s}
+  .ov-head{opacity:0;transform:translateY(10px);transition:opacity .3s ease,transform .3s ease}
+  .overlay-menu.open .ov-head{opacity:1;transform:translateY(0);transition-delay:.7s}
+  .ov-h2{font-size:30px;font-weight:800;color:#0B3B3A;margin:0;letter-spacing:-.3px}
+  .ov-desc{font-size:15px;color:#5B7A78;margin:6px 0 0 0;font-weight:500}
+  .ov-divider{
+    height:2px;background:linear-gradient(90deg,#0B6E6A 0%,rgba(11,110,106,0.1) 100%);
+    margin:18px 0 24px 0;opacity:0;transform:scaleX(0);transform-origin:left center;
+    transition:opacity .3s ease,transform .4s ease;
+  }
+  .overlay-menu.open .ov-divider{opacity:1;transform:scaleX(1);transition-delay:.75s}
+  .ov-cards{display:flex;gap:14px;flex-wrap:wrap}
+  .ov-card{
+    width:182px;padding:18px 16px;
+    background:linear-gradient(135deg,#F0FAF8 0%,#DCF3EC 100%);
+    border-radius:12px;border:1px solid rgba(11,110,106,0.12);
+    opacity:0;transform:translateY(20px);
+    transition:opacity .4s ease,transform .4s ease;
+  }
+  .overlay-menu.open .ov-card{opacity:1;transform:translateY(0);transition-delay:var(--d,0s)}
+  .ov-num{display:inline-block;font-size:11px;font-weight:700;color:#0B6E6A;background:rgba(11,110,106,0.1);padding:3px 8px;border-radius:6px;margin-bottom:10px;letter-spacing:.5px}
+  .ov-title{font-size:15px;font-weight:700;color:#0B3B3A;min-height:38px;line-height:1.3}
+  .ov-btn{
+    display:inline-flex;align-items:center;gap:5px;padding:6px 14px;
+    background:#0B6E6A;color:#fff;border:none;border-radius:999px;
+    font-family:'Open Sans',sans-serif;font-size:11px;font-weight:700;
+    cursor:pointer;margin-top:12px;letter-spacing:.3px;
+    transition:background .2s ease,transform .2s ease;
+  }
+  .ov-btn:hover{background:#0B3B3A;transform:translateX(2px)}
+  .ov-x{
+    position:absolute;left:1154px;top:166px;width:38px;height:38px;
+    border-radius:50%;background:#0B3B3A;color:#fff;border:none;
+    font-family:'Open Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;z-index:18;
+    opacity:0;transform:scale(0) rotate(-90deg);
+    box-shadow:0 4px 12px rgba(11,59,58,0.25);
+    transition:opacity .3s ease,transform .3s ease,background .2s ease;
+  }
+  .overlay-menu.open .ov-x{opacity:1;transform:scale(1) rotate(0deg);transition-delay:.85s}
+  .overlay-menu.open .ov-x:hover{background:#d32f2f;transform:scale(1.1) rotate(0deg);transition-delay:0s}
+
+  /* Hero content dimmed while a Daftar Isi overlay is open */
+  .hero-dim{transition:opacity .4s ease}
+  .slide-root.menu-open .hero-dim{opacity:.25;pointer-events:none}
 </style>
 </head>
 <body>
@@ -86,18 +151,20 @@
 <script>
 "use strict";
 /* ============================================================
-   INFOTRINK — Static HTML build (converted from Next.js/React)
+   INFOTRINK — Static HTML build (vanilla JS)
+   - Daftar Isi: overlay PERSISTEN di DOM, animasi murni CSS
+     via class .open (garis L tergambar, dot, kotak, kartu).
+   - Halaman sub-menu KOSONG, kecuali Informasi > Media Digital
+     (halaman Media Sosial).
    ============================================================ */
 
 /* ===== STATE ===== */
 const state = {
   view: 'beranda',         // 'beranda' | 'submenu'
-  menu: null,              // current submenu's parent menu
+  menu: null,              // parent menu of current submenu page
   submenu: null,           // current submenu name
-  article: null,           // article slug when in detail view
   activeMenu: null,        // currently-open overlay menu
-  lastActiveMenu: null,    // last interacted menu (for underline)
-  closingMenu: null,       // menu currently animating closed
+  lastActiveMenu: null,    // last menu interacted (nav underline)
   scale: 0,
   contentHeight: 0,
   navPositions: {}         // {menuKey: centerXInSlideCoords}
@@ -131,31 +198,6 @@ const LINE_START_Y = 78, LINE_TURN_Y = 150, BOX_LEFT = 70, BOX_RIGHT = 1210, BOX
 const MARQUEE_WORDS = ["BERKEMBANG","KETERAMPILAN","KETEKUNAN","KERJA KERAS","KONSISTEN","KEMAJUAN","KEBERHASILAN","PERJUANGAN","TEKAD"];
 const HERO_MARQUEE_ITEMS = ["Instagram @jri_munawar","Twitter @Jri_munawar","Bagian dari jaringan JRI MUNAWAR GROUP"];
 
-const DOKUMEN_INFOTRINK_URL = "artikel-infotrink.pdf";
-
-const ARTIKEL_TERHIMPUN = [
-  {
-    slug:"pedoman-artikel",
-    jenis:"Pedoman",
-    jenisBg:"rgba(11, 110, 106, 0.10)",
-    jenisColor:"#0B6E6A",
-    judul:"Pedoman dan Template Penyusunan Artikel — Media Informasi dan Penjelasan",
-    penulis:"Muhammad Fajri Munawar",
-    halaman:"10 halaman",
-    ringkas:"Pedoman praktis untuk merencanakan, menulis, menyunting, dan menyiapkan artikel informasi dan penjelasan: fungsi setiap bagian artikel, urutan penyusunan, unsur yang perlu dimuat, serta kerangka yang dapat langsung diisi oleh penulis."
-  },
-  {
-    slug:"memahami-perkembangan-informasi",
-    jenis:"Contoh Rancangan",
-    jenisBg:"rgba(139, 92, 246, 0.12)",
-    jenisColor:"#6D3FD4",
-    judul:"Memahami Perkembangan Informasi dan Pengetahuan dalam Membentuk Wawasan di Era Modern",
-    penulis:"Muhammad Fajri Munawar",
-    halaman:"Bab 7 pedoman",
-    ringkas:"Contoh penerapan kerangka pedoman pada satu judul terpilih: arah dan tujuan artikel, rancangan abstrak, rancangan subjudul pembahasan, rancangan kesimpulan, serta sumber yang perlu ditelusuri."
-  }
-];
-
 const PLATFORMS_SOSIAL = [
   { name:"Instagram", logo:"slide/logo-instagram.png" },
   { name:"X (Twitter)", logo:"slide/logo-x.png" },
@@ -176,15 +218,6 @@ const PLATFORMS_CHATTING = [
   { name:"Slack", logo:"slide/logo-slack.png" }
 ];
 
-const GALERI_ARSIP = [
-  { src:"slide/kegiatan_liputan.jpg", caption:"Kegiatan liputan lapangan" },
-  { src:"slide/tim_kolaborasi.jpg", caption:"Kolaborasi tim" },
-  { src:"slide/hero_studio_kreatif.jpg", caption:"Pengelolaan konten di ruang kerja" },
-  { src:"slide/hero_4_narasumber.jpg", caption:"Narasumber saat sesi wawancara" },
-  { src:"slide/hero_berbagi_sesama.jpg", caption:"Kegiatan berbagi untuk sesama" },
-  { src:"slide/hero_pembangunan.jpg", caption:"Pemeriksaan denah pembangunan" }
-];
-
 /* ===== HELPERS ===== */
 // Wrap "INFOTRINK" occurrences with translate="no" so Google Translate keeps the brand name.
 function brandText(text){
@@ -202,6 +235,7 @@ function escapeHtml(s){
     .replace(/"/g,'&quot;')
     .replace(/'/g,'&#39;');
 }
+function escapeAttr(s){ return escapeHtml(s); }
 // Convert a style object to a CSS string (camelCase -> kebab-case).
 function S(o){
   const out = [];
@@ -214,6 +248,13 @@ function S(o){
   }
   return out.join(';');
 }
+function getSlide(){
+  return document.querySelector('[data-slide-content]');
+}
+function ovSelector(menuKey){
+  return '.overlay-menu[data-menu="'+menuKey+'"]';
+}
+
 /* ===== ICONS (lucide-style inline SVG, 24x24 stroke) ===== */
 const ICONS = {
   Lightbulb: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B6E6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
@@ -229,18 +270,7 @@ const ICONS = {
 function renderHeader(){
   let navLinks = '';
   for(const item of NAV_ITEMS){
-    const isActive = state.activeMenu === item;
-    const isLastActive = state.lastActiveMenu === item && !state.activeMenu;
-    const isDefaultBeranda = item === "Beranda" && !state.activeMenu && !state.lastActiveMenu;
-    const highlighted = isActive || isLastActive || isDefaultBeranda;
-    navLinks += '<a class="nav-link" href="#" data-nav="'+escapeHtml(item)+'" onclick="return navClick(\''+escapeAttr(item)+'\', event)" style="'+S({
-      fontFamily:"'Open Sans', sans-serif", fontSize:"15px",
-      fontWeight: highlighted?700:600,
-      color: highlighted?"#0B6E6A":"#0B3B3A",
-      textDecoration:"none", padding:"4px 0",
-      borderBottom: highlighted?"2px solid #0B6E6A":"2px solid transparent",
-      letterSpacing:"0.2px", cursor:"pointer", display:"inline-block"
-    })+'">'+brandText(item)+'</a>';
+    navLinks += '<a class="nav-link" href="#" data-nav="'+escapeAttr(item)+'" onclick="return navClick(\''+escapeAttr(item)+'\', event)">'+brandText(item)+'</a>';
   }
   return '<header style="'+S({position:"absolute", top:"32px", left:"70px", right:"70px", display:"flex", alignItems:"center", justifyContent:"space-between", zIndex:10})+'">'
     + '<div style="'+S({display:"flex", alignItems:"center", gap:"12px", padding:"8px 22px 8px 10px", background:"rgba(255,255,255,0.85)", backdropFilter:"blur(10px)", borderRadius:"999px", boxShadow:"0 4px 16px rgba(11,59,58,0.12)", border:"1px solid rgba(255,255,255,0.6)"})+'">'
@@ -251,17 +281,54 @@ function renderHeader(){
     + navLinks + '</nav></header>';
 }
 
+/* ===== OVERLAY MENU (L-line SVG + white box + cards + X) =====
+   Rendered ONCE per slide and kept in the DOM. Opening/closing only
+   toggles the .open class, so the CSS transitions really animate. */
+function renderOverlay(menuKey){
+  const menuData = SUB_MENUS[menuKey];
+  const navX = state.navPositions[menuKey] != null ? state.navPositions[menuKey] : NAV_X[menuKey];
+  const linePath = "M "+navX+" "+LINE_START_Y+" L "+navX+" "+LINE_TURN_Y+" L "+BOX_LEFT+" "+LINE_TURN_Y;
+
+  // Cards — stagger delay via CSS custom property --d
+  let cards = '';
+  for(let i=0; i<menuData.items.length; i++){
+    const item = menuData.items[i];
+    const delay = (0.85 + i*0.08).toFixed(2);
+    cards += '<div class="ov-card" style="--d:'+delay+'s">'
+      + '<span class="ov-num">'+String(i+1).padStart(2,'0')+'</span>'
+      + '<div class="ov-title">'+brandText(item)+'</div>'
+      + '<button class="ov-btn" onclick="openSubmenu(\''+escapeAttr(menuKey)+'\', \''+escapeAttr(item)+'\')">Telusuri →</button>'
+      + '</div>';
+  }
+
+  return '<div class="overlay-menu" data-menu="'+escapeAttr(menuKey)+'">'
+    + '<svg class="ov-svg" width="1280" height="720">'
+    + '<circle class="ov-dot-start" cx="'+navX+'" cy="'+LINE_START_Y+'" r="5"></circle>'
+    + '<path class="ov-line" d="'+linePath+'" pathLength="1"></path>'
+    + '<circle class="ov-dot-end" cx="'+BOX_LEFT+'" cy="'+LINE_TURN_Y+'" r="5"></circle>'
+    + '</svg>'
+    + '<div class="ov-box">'
+    + '<div class="ov-head">'
+    + '<h2 class="ov-h2">'+brandText(menuKey)+'</h2>'
+    + '<p class="ov-desc">'+brandText(menuData.description)+'</p>'
+    + '</div>'
+    + '<div class="ov-divider"></div>'
+    + '<div class="ov-cards">'+cards+'</div>'
+    + '</div>'
+    + '<button class="ov-x" onclick="closeOverlay()" aria-label="Tutup daftar isi">✕</button>'
+    + '</div>';
+}
+
 /* ===== HERO (Beranda top, 1280x720) ===== */
 function renderHero(){
-  const isOpen = state.activeMenu !== null;
-  // Overlay menus (always rendered; visibility toggled)
+  // Overlays are rendered once, persistent; visibility is class-driven.
   let overlays = '';
   for(const menuKey of Object.keys(SUB_MENUS)){
     overlays += renderOverlay(menuKey);
   }
-  return '<div data-slide-content style="'+S({position:"relative", width:"1280px", height:"720px", overflow:"hidden", background:"linear-gradient(180deg, #81F6EF 0%, #9CF4ED 22%, #B2FBF6 45%, #CFFCF6 68%, #E1FFFD 88%, #E8FEFC 100%)", fontFamily:"'Open Sans', 'Segoe UI', Tahoma, sans-serif"})+'">'
-    // Hero content (dimmed when overlay open)
-    + '<div style="'+S({opacity: isOpen?0.25:1, transition:"opacity 0.4s ease", pointerEvents: isOpen?"none":"auto"})+'">'
+  return '<div data-slide-content class="slide-root" style="'+S({position:"relative", width:"1280px", height:"720px", overflow:"hidden", background:"linear-gradient(180deg, #81F6EF 0%, #9CF4ED 22%, #B2FBF6 45%, #CFFCF6 68%, #E1FFFD 88%, #E8FEFC 100%)", fontFamily:"'Open Sans', 'Segoe UI', Tahoma, sans-serif"})+'">'
+    // Hero content (dimmed while a Daftar Isi overlay is open)
+    + '<div class="hero-dim">'
     + renderHeader()
     // Main hero content (left column)
     + '<div style="'+S({position:"absolute", left:"70px", top:"150px", width:"560px", zIndex:5})+'">'
@@ -293,7 +360,7 @@ function renderHero(){
     + renderPhoto(299, 294, "slide/hero_pembangunan.jpg", "Petugas memeriksa denah pembangunan di lokasi proyek konstruksi")
     + '</div>'
     + '</div>'
-    // Overlays
+    // Overlays (persistent, above hero)
     + overlays
     + '</div>';
 }
@@ -318,49 +385,6 @@ function renderPhoto(top, left, src, alt){
     + '<img src="'+escapeAttr(src)+'" alt="'+escapeAttr(alt)+'" width="240" height="240" loading="eager" style="'+S({width:"240px", height:"240px", objectFit:"cover", borderRadius:"12px", display:"block"})+'">'
     + '</div></div>';
 }
-
-/* ===== OVERLAY MENU (L-line SVG + white box + cards + X) ===== */
-function renderOverlay(menuKey){
-  const menuData = SUB_MENUS[menuKey];
-  const navX = state.navPositions[menuKey] != null ? state.navPositions[menuKey] : NAV_X[menuKey];
-  const isOpen = state.activeMenu === menuKey;
-  const isClosing = state.closingMenu === menuKey;
-  const visible = isOpen || isClosing;
-  const linePath = "M "+navX+" "+LINE_START_Y+" L "+navX+" "+LINE_TURN_Y+" L "+BOX_LEFT+" "+LINE_TURN_Y;
-
-  // Cards
-  let cards = '';
-  for(let i=0; i<menuData.items.length; i++){
-    const item = menuData.items[i];
-    const delay = isOpen ? (0.85 + i*0.08) : 0;
-    cards += '<div style="'+S({width:"182px", padding:"18px 16px", background:"linear-gradient(135deg, #F0FAF8 0%, #DCF3EC 100%)", borderRadius:"12px", border:"1px solid rgba(11,110,106,0.12)", opacity: isOpen?1:0, transform: isOpen?"translateY(0)":"translateY(20px)", transition:"opacity 0.4s ease "+delay+"s, transform 0.4s ease "+delay+"s"})+'">'
-      + '<div style="'+S({display:"inline-block", fontSize:"11px", fontWeight:700, color:"#0B6E6A", background:"rgba(11,110,106,0.1)", padding:"3px 8px", borderRadius:"6px", marginBottom:"10px", letterSpacing:"0.5px"})+'">'+String(i+1).padStart(2,'0')+'</div>'
-      + '<div style="'+S({fontSize:"15px", fontWeight:700, color:"#0B3B3A", minHeight:"38px", lineHeight:1.3})+'">'+brandText(item)+'</div>'
-      + '<button class="btn-telusuri" onclick="openSubmenu(\''+escapeAttr(menuKey)+'\', \''+escapeAttr(item)+'\')" style="'+S({display:"inline-flex", alignItems:"center", gap:"5px", padding:"6px 14px", background:"#0B6E6A", color:"white", border:"none", borderRadius:"999px", fontSize:"11px", fontWeight:700, cursor:"pointer", marginTop:"12px", letterSpacing:"0.3px"})+'">Telusuri →</button>'
-      + '</div>';
-  }
-
-  return '<div class="overlay-menu" data-menu="'+escapeAttr(menuKey)+'" style="'+S({visibility: visible?"visible":"hidden", position:"absolute", inset:0, pointerEvents:"none"})+'">'
-    + '<svg width="1280" height="720" style="'+S({position:"absolute", inset:0, pointerEvents:"none", zIndex:20})+'">'
-    + '<circle cx="'+navX+'" cy="'+LINE_START_Y+'" r="5" fill="#0B6E6A" style="'+S({opacity: isOpen?1:0, transition:"opacity 0.3s ease "+(isOpen?"0s":"1.2s")})+'"></circle>'
-    + '<path d="'+linePath+'" stroke="#0B6E6A" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" style="'+S({strokeDasharray:1, strokeDashoffset: isOpen?0:1, transition:"stroke-dashoffset 0.6s ease "+(isOpen?"0s":"0.7s")})+'"></path>'
-    + '<circle cx="'+BOX_LEFT+'" cy="'+LINE_TURN_Y+'" r="5" fill="#0B6E6A" style="'+S({opacity: isOpen?1:0, transition:"opacity 0.3s ease "+(isOpen?"0.5s":"0.6s")})+'"></circle>'
-    + '</svg>'
-    // White box
-    + '<div style="'+S({position:"absolute", left:BOX_LEFT, top:LINE_TURN_Y, width:(BOX_RIGHT-BOX_LEFT), height:(BOX_BOTTOM-LINE_TURN_Y), background:"rgba(255,255,255,0.97)", borderRadius:"0 0 16px 16px", boxShadow:"0 8px 32px rgba(11,59,58,0.18)", zIndex:15, pointerEvents: isOpen?"auto":"none", opacity: isOpen?1:0, transform: isOpen?"scaleY(1)":"scaleY(0)", transformOrigin:"center top", transition:"opacity 0.4s ease "+(isOpen?"0.5s":"0.3s")+", transform 0.4s ease "+(isOpen?"0.5s":"0.3s"), padding:"36px 44px", overflow:"hidden"})+'">'
-    + '<div style="'+S({opacity: isOpen?1:0, transform: isOpen?"translateY(0)":"translateY(10px)", transition:"opacity 0.3s ease "+(isOpen?"0.7s":"0s")+", transform 0.3s ease "+(isOpen?"0.7s":"0s")})+'">'
-    + '<h2 style="'+S({fontSize:"30px", fontWeight:800, color:"#0B3B3A", margin:0, letterSpacing:"-0.3px"})+'">'+brandText(menuKey)+'</h2>'
-    + '<p style="'+S({fontSize:"15px", color:"#5B7A78", margin:"6px 0 0 0", fontWeight:500})+'">'+brandText(menuData.description)+'</p>'
-    + '</div>'
-    + '<div style="'+S({height:"2px", background:"linear-gradient(90deg, #0B6E6A 0%, rgba(11,110,106,0.1) 100%)", margin:"18px 0 24px 0", opacity: isOpen?1:0, transform: isOpen?"scaleX(1)":"scaleX(0)", transformOrigin:"left center", transition:"opacity 0.3s ease "+(isOpen?"0.75s":"0s")+", transform 0.4s ease "+(isOpen?"0.75s":"0s")})+'"></div>'
-    + '<div style="'+S({display:"flex", gap:"14px", flexWrap:"wrap"})+'">'+cards+'</div>'
-    + '</div>'
-    // X close button
-    + '<button class="btn-x" onclick="closeOverlay()" style="'+S({position:"absolute", left:(BOX_RIGHT-56), top:(LINE_TURN_Y+16), width:"38px", height:"38px", borderRadius:"50%", background:"#0B3B3A", color:"white", border:"none", fontSize:"16px", fontWeight:700, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", zIndex:18, pointerEvents: isOpen?"auto":"none", opacity: isOpen?1:0, transform: isOpen?"scale(1) rotate(0deg)":"scale(0) rotate(-90deg)", transition:"opacity 0.3s ease "+(isOpen?"0.85s":"0.2s")+", transform 0.3s ease "+(isOpen?"0.85s":"0.2s")+", background 0.2s ease", boxShadow:"0 4px 12px rgba(11,59,58,0.25)"})+'">✕</button>'
-    + '</div>';
-}
-
-function escapeAttr(s){ return escapeHtml(s); }
 
 /* ===== BERANDA SECTIONS (below hero) ===== */
 function renderBerandaSections(){
@@ -483,7 +507,7 @@ function renderSectionPenutup(){
   // Footer columns
   const navFooter = ["Beranda","Publikasi","Informasi","Galeri","Mengenal INFOTRINK"].map(i => '<li><a href="#" onclick="return navClick(\''+escapeAttr(i)+'\', event)" style="'+S({fontSize:"13px", color:"rgba(255,255,255,0.75)", textDecoration:"none"})+'">'+brandText(i)+'</a></li>').join('');
   const bidangFooter = ["Media Digital","Pembangunan","Personal","Bidang Lainnya"].map(i => '<li><a href="#" onclick="return openSubmenuFromFooter(\'Informasi\',\''+escapeAttr(i)+'\')" style="'+S({fontSize:"13px", color:"rgba(255,255,255,0.75)", textDecoration:"none"})+'">'+escapeHtml(i)+'</a></li>').join('');
-  const jenisFooter = ["Media Informasi","Hasil Riset","Kajian & Analisis","Laporan","Data & Referensi","Gagasan"].map(i => '<li><a href="#" style="'+S({fontSize:"13px", color:"rgba(255,255,255,0.75)", textDecoration:"none"})+'">'+escapeHtml(i)+'</a></li>').join('');
+  const jenisFooter = ["Media Informasi","Hasil Riset","Kajian & Analisis","Laporan","Data & Referensi","Gagasan"].map(i => '<li><a href="#" onclick="return false" style="'+S({fontSize:"13px", color:"rgba(255,255,255,0.75)", textDecoration:"none"})+'">'+escapeHtml(i)+'</a></li>').join('');
 
   return '<section style="'+S({position:"relative", background:"linear-gradient(180deg, #0B3B3A 0%, #0B6E6A 60%, #0B3B3A 100%)", overflow:"hidden"})+'">'
     + '<div aria-hidden="true" style="'+S({position:"absolute", top:"-150px", right:"-150px", width:"400px", height:"400px", borderRadius:"50%", background:"rgba(129,246,239,0.08)"})+'"></div>'
@@ -524,42 +548,27 @@ function renderSectionPenutup(){
     + '</div></section>';
 }
 
-/* ===== SHARED: Submenu shell ===== */
+/* ===== SUBMENU PAGE (shell only) =====
+   Halaman sub-menu TIDAK memuat isi — hanya shell: header + nav,
+   overlay daftar isi, dan breadcrumb + tombol kembali.
+   SATU-SATUNYA pengecualian: Informasi > Media Digital (halaman Media Sosial). */
 function renderSubmenuPage(){
-  // Decide which content to render based on menu/submenu
   const menu = state.menu, submenu = state.submenu;
   const isMediaDigital = (menu === "Informasi" && submenu === "Media Digital");
-  const isArticleList = (menu === "Publikasi" && submenu === "Media Informasi & Penjelasan");
-  const isGaleri = (menu === "Galeri");
+  const bodyHtml = isMediaDigital ? renderMediaDigital() : '';
 
-  // Article detail view takes priority
-  let bodyHtml;
-  if(state.article){
-    bodyHtml = renderArticleDetail(state.article);
-  } else if(isMediaDigital){
-    bodyHtml = renderMediaDigital();
-  } else if(isArticleList){
-    bodyHtml = renderArticleList();
-  } else if(menu === "Mengenal INFOTRINK"){
-    bodyHtml = renderMengenalInfotrinkPage(submenu);
-  } else if(isGaleri || menu === "Informasi" || menu === "Publikasi"){
-    bodyHtml = renderMateriUmum(menu, submenu);
-  } else {
-    bodyHtml = renderMateriUmum(menu, submenu);
-  }
-
-  // Overlay menus (always rendered; visibility toggled)
+  // Overlay menus (persistent; visibility is class-driven)
   let overlays = '';
   for(const menuKey of Object.keys(SUB_MENUS)){
     overlays += renderOverlay(menuKey);
   }
 
-  return '<div data-slide-content style="'+S({position:"relative", width:"1280px", minHeight:"720px", background:"linear-gradient(180deg, #81F6EF 0%, #9CF4ED 22%, #B2FBF6 45%, #CFFCF6 68%, #E1FFFD 88%, #E8FEFC 100%)", fontFamily:"'Open Sans', 'Segoe UI', Tahoma, sans-serif"})+'">'
+  return '<div data-slide-content class="slide-root" style="'+S({position:"relative", width:"1280px", minHeight:"720px", background:"linear-gradient(180deg, #81F6EF 0%, #9CF4ED 22%, #B2FBF6 45%, #CFFCF6 68%, #E1FFFD 88%, #E8FEFC 100%)", fontFamily:"'Open Sans', 'Segoe UI', Tahoma, sans-serif"})+'">'
     + renderHeader()
     + overlays
     // Breadcrumb
     + '<div style="'+S({position:"absolute", top:"110px", left:"70px", right:"70px", display:"flex", alignItems:"center", gap:"10px", fontSize:"13px", color:"#5B7A78", fontWeight:600, zIndex:5})+'">'
-    + '<button onclick="'+(state.article ? "backToList()" : "backToBeranda()")+'" style="'+S({display:"inline-flex", alignItems:"center", gap:"5px", padding:"6px 14px", background:"white", color:"#0B6E6A", border:"1px solid rgba(11,110,106,0.2)", borderRadius:"999px", fontSize:"12px", fontWeight:700, cursor:"pointer", letterSpacing:"0.3px"})+'">'+(state.article ? "← Media Informasi" : "← Beranda")+'</button>'
+    + '<button onclick="backToBeranda()" style="'+S({display:"inline-flex", alignItems:"center", gap:"5px", padding:"6px 14px", background:"white", color:"#0B6E6A", border:"1px solid rgba(11,110,106,0.2)", borderRadius:"999px", fontSize:"12px", fontWeight:700, cursor:"pointer", letterSpacing:"0.3px"})+'">← Beranda</button>'
     + '<span style="'+S({opacity:0.5})+'">›</span>'
     + '<span>'+brandText(menu)+'</span>'
     + '<span style="'+S({opacity:0.5})+'">›</span>'
@@ -569,133 +578,8 @@ function renderSubmenuPage(){
     + '</div>';
 }
 
-/* ===== SHARED page-building helpers ===== */
-function renderPageIntro(judul, intro){
-  return '<div style="'+S({marginBottom:"34px"})+'">'
-    + '<h1 style="'+S({fontSize:"36px", fontWeight:800, color:"#0B3B3A", margin:"0 0 12px 0", letterSpacing:"0.5px", textTransform:"uppercase"})+'">'+brandText(judul)+'</h1>'
-    + '<p style="'+S({fontSize:"15.5px", color:"#5B7A78", margin:0, lineHeight:1.7, textAlign:"justify", textJustify:"inter-word"})+'">'+escapeHtml(intro)+'</p>'
-    + '</div>';
-}
-
-function renderFeatureRow(src, alt, title, body, reverse){
-  return '<div style="'+S({background:"white", borderRadius:"16px", padding:"22px", display:"flex", gap:"24px", alignItems:"stretch", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 4px 12px rgba(11,59,58,0.06)", flexDirection: reverse?"row-reverse":"row", marginBottom:"20px"})+'">'
-    + '<div style="'+S({width:"480px", flexShrink:0, borderRadius:"12px", overflow:"hidden", background:"#F0FAF9"})+'">'
-    + '<img src="'+escapeAttr(src)+'" alt="'+escapeAttr(alt)+'" style="'+S({width:"100%", height:"272px", objectFit:"cover", display:"block"})+'"></div>'
-    + '<div style="'+S({flex:1, display:"flex", flexDirection:"column", justifyContent:"center"})+'">'
-    + '<h3 style="'+S({fontSize:"19px", fontWeight:800, color:"#0B3B3A", margin:"0 0 10px 0", lineHeight:1.35})+'">'+escapeHtml(title)+'</h3>'
-    + '<div style="'+S({fontSize:"14px", lineHeight:1.75, color:"#5B7A78", textAlign:"justify", textJustify:"inter-word"})+'">'+body+'</div>'
-    + '</div></div>';
-}
-
-function renderChipStrip(title, items){
-  const chips = items.map(i => '<span style="'+S({padding:"8px 16px", borderRadius:"999px", background:"rgba(11,110,106,0.08)", border:"1px solid rgba(11,110,106,0.15)", fontSize:"13px", fontWeight:700, color:"#0B6E6A"})+'">'+escapeHtml(i)+'</span>').join('');
-  return '<div style="'+S({background:"white", borderRadius:"16px", padding:"24px 28px", marginBottom:"20px", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 2px 8px rgba(11,59,58,0.04)"})+'">'
-    + '<h3 style="'+S({fontSize:"16px", fontWeight:800, color:"#0B3B3A", margin:"0 0 14px 0"})+'">'+escapeHtml(title)+'</h3>'
-    + '<div style="'+S({display:"flex", flexWrap:"wrap", gap:"10px"})+'">'+chips+'</div>'
-    + '</div>';
-}
-
-function renderDetailDocHeader(badge, judul, metaItems){
-  const metas = metaItems.map(m => '<div><div style="'+S({fontSize:"10.5px", color:"rgba(129,246,239,0.7)", fontWeight:700, letterSpacing:"1px", textTransform:"uppercase", marginBottom:"3px"})+'">'+escapeHtml(m.label)+'</div><div style="'+S({fontSize:"13.5px", color:"white", fontWeight:700})+'">'+brandText(m.value)+'</div></div>').join('');
-  return '<div style="'+S({background:"linear-gradient(135deg, #0B3B3A 0%, #0B6E6A 100%)", borderRadius:"16px", padding:"30px 34px", marginBottom:"20px", position:"relative", overflow:"hidden"})+'">'
-    + '<div style="'+S({position:"absolute", top:"-60px", right:"-60px", width:"200px", height:"200px", borderRadius:"50%", background:"rgba(129,246,239,0.08)"})+'"></div>'
-    + '<div style="'+S({position:"relative"})+'">'
-    + '<span style="'+S({display:"inline-block", padding:"5px 12px", borderRadius:"999px", background:"rgba(129,246,239,0.15)", border:"1px solid rgba(129,246,239,0.35)", color:"#81F6EF", fontSize:"11px", fontWeight:800, letterSpacing:"0.6px", textTransform:"uppercase", marginBottom:"14px"})+'">'+escapeHtml(badge)+'</span>'
-    + '<h1 style="'+S({fontSize:"25px", fontWeight:800, color:"white", margin:"0 0 18px 0", lineHeight:1.35, letterSpacing:"-0.3px"})+'">'+escapeHtml(judul)+'</h1>'
-    + '<div style="'+S({display:"flex", flexWrap:"wrap", gap:"10px 28px", marginBottom:"20px"})+'">'+metas+'</div>'
-    + '<a href="'+DOKUMEN_INFOTRINK_URL+'" download style="'+S({display:"inline-flex", alignItems:"center", gap:"8px", padding:"12px 24px", background:"#FDEEC5", color:"#0B3B3A", border:"2px solid #0B3B3A", borderRadius:"999px", fontSize:"14px", fontWeight:700, textDecoration:"none", letterSpacing:"0.3px"})+'">↓ Download Dokumen</a>'
-    + '</div></div>';
-}
-
-function renderDetailSection(title, bodyHtml){
-  return '<div style="'+S({background:"white", borderRadius:"16px", padding:"26px 32px", marginBottom:"18px", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 2px 8px rgba(11,59,58,0.04)"})+'">'
-    + '<h3 style="'+S({fontSize:"17px", fontWeight:800, color:"#0B3B3A", margin:"0 0 14px 0", display:"flex", alignItems:"center", gap:"10px"})+'"><span style="'+S({width:"4px", height:"18px", borderRadius:"2px", background:"#0B6E6A", display:"inline-block", flexShrink:0})+'"></span>'+escapeHtml(title)+'</h3>'
-    + bodyHtml + '</div>';
-}
-function renderDetailP(text){
-  return '<p style="'+S({fontSize:"14px", lineHeight:1.75, color:"#41585A", margin:"0 0 10px 0", textAlign:"justify", textJustify:"inter-word"})+'">'+escapeHtml(text)+'</p>';
-}
-
-/* ===== ARTICLE LIST (Publikasi > Media Informasi & Penjelasan) ===== */
-function renderArticleList(){
-  const cards = ARTIKEL_TERHIMPUN.map(a => 
-    '<div class="hover-card" style="'+S({background:"white", borderRadius:"16px", padding:"24px 26px", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 4px 12px rgba(11,59,58,0.06)", display:"flex", flexDirection:"column", gap:"12px"})+'">'
-    + '<div style="'+S({display:"flex", alignItems:"center", justifyContent:"space-between"})+'">'
-    + '<span style="'+S({padding:"5px 12px", borderRadius:"999px", background:a.jenisBg, color:a.jenisColor, fontSize:"11px", fontWeight:800, letterSpacing:"0.6px", textTransform:"uppercase"})+'">'+escapeHtml(a.jenis)+'</span>'
-    + '<span style="'+S({fontSize:"11.5px", color:"#9CB3B0", fontWeight:600})+'">'+escapeHtml(a.halaman)+'</span>'
-    + '</div>'
-    + '<h3 onclick="selectArticle(\''+escapeAttr(a.slug)+'\')" style="'+S({fontSize:"17.5px", fontWeight:800, color:"#0B3B3A", margin:0, lineHeight:1.4, cursor:"pointer"})+'">'+escapeHtml(a.judul)+'</h3>'
-    + '<p style="'+S({fontSize:"13.5px", lineHeight:1.7, color:"#5B7A78", margin:0, textAlign:"justify", textJustify:"inter-word", flex:1})+'">'+escapeHtml(a.ringkas)+'</p>'
-    + '<div style="'+S({fontSize:"12px", color:"#9CB3B0", fontWeight:600})+'">Disusun oleh <span style="'+S({color:"#0B3B3A", fontWeight:700})+'">'+brandText(a.penulis)+'</span></div>'
-    + '<div style="'+S({display:"flex", gap:"10px", alignItems:"center"})+'">'
-    + '<button onclick="selectArticle(\''+escapeAttr(a.slug)+'\')" style="'+S({flex:1, padding:"11px 16px", background:"#0B6E6A", color:"white", border:"none", borderRadius:"999px", fontSize:"13px", fontWeight:700, cursor:"pointer", letterSpacing:"0.3px"})+'">Baca Detail →</button>'
-    + '<a href="'+DOKUMEN_INFOTRINK_URL+'" download style="'+S({flex:1, padding:"10px 16px", background:"#FDEEC5", color:"#0B3B3A", border:"2px solid #0B3B3A", borderRadius:"999px", fontSize:"13px", fontWeight:700, textDecoration:"none", textAlign:"center", letterSpacing:"0.3px"})+'">↓ Download Dokumen</a>'
-    + '</div></div>'
-  ).join('');
-  return '<div style="'+S({padding:"165px 70px 60px"})+'">'
-    + '<div style="'+S({marginBottom:"36px"})+'">'
-    + '<h1 style="'+S({fontSize:"36px", fontWeight:800, color:"#0B3B3A", margin:"0 0 12px 0", letterSpacing:"0.5px", textTransform:"uppercase"})+'">Media Informasi &amp; Penjelasan</h1>'
-    + '<p style="'+S({fontSize:"15.5px", color:"#5B7A78", margin:0, lineHeight:1.7, textAlign:"justify", textJustify:"inter-word"})+'">Ruang publikasi untuk media informasi dan penjelasan yang menyampaikan fakta, konsep, proses, perkembangan, atau fenomena dengan bahasa yang jelas dan susunan yang terarah. Dokumen di bawah ini telah terhimpun dan siap ditelusuri — setiap media dapat dibaca lebih rinci atau diunduh dalam bentuk dokumen aslinya.</p>'
-    + '</div>'
-    + '<div style="'+S({display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"18px", marginBottom:"28px"})+'">'+cards+'</div>'
-    + '<div style="'+S({background:"rgba(11,110,106,0.06)", borderRadius:"16px", padding:"20px 26px", border:"1px dashed rgba(11,110,106,0.25)", display:"flex", alignItems:"center", gap:"16px"})+'">'
-    + '<div style="'+S({width:"40px", height:"40px", borderRadius:"10px", background:"rgba(11,110,106,0.12)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, fontSize:"18px"})+'">⏳</div>'
-    + '<p style="'+S({fontSize:"13.5px", color:"#41585A", margin:0, lineHeight:1.65, textAlign:"justify", textJustify:"inter-word"})+'">Jenis materi lainnya pada Publikasi — <b>Hasil Riset dan Penelitian</b>, <b>Kajian dan Analisis</b>, <b>Laporan &amp; Catatan Perkembangan</b>, <b>Data dan Referensi</b>, serta <b>Gagasan &amp; Konsep Pengembangan</b> — menanti publikasi dan akan mengikuti format pedoman yang sama dengan dokumen di atas.</p>'
-    + '</div></div>';
-}
-
-/* ===== ARTICLE DETAIL ===== */
-function renderArticleDetail(slug){
-  if(slug === "memahami-perkembangan-informasi"){
-    const subRows = [
-      ["Data, informasi, dan pengetahuan: pengertian serta perbedaannya","Bangun pemahaman dasar dan jelaskan hubungan ketiganya dengan contoh sederhana."],
-      ["Perkembangan penyebaran informasi dari masa ke masa","Uraikan perubahan media komunikasi dan penyimpanan informasi secara kronologis."],
-      ["Transformasi digital dan perubahan akses pengetahuan","Bahas internet, platform digital, perpustakaan daring, dan teknologi pencarian informasi."],
-      ["Proses mengolah informasi menjadi pemahaman","Jelaskan pencarian, pemilihan, pemeriksaan, perbandingan, interpretasi, dan penerapan informasi."],
-      ["Literasi informasi dan berpikir kritis","Bahas kemampuan menilai sumber, memeriksa bukti, mengenali bias, dan menghindari kesimpulan terburu-buru."],
-      ["Tantangan informasi di era modern","Uraikan misinformasi, disinformasi, bias, privasi, dan kelebihan informasi secara proporsional."],
-      ["Pemanfaatan informasi dalam kehidupan","Berikan contoh pada pendidikan, pekerjaan, bisnis, kehidupan sosial, dan pengambilan keputusan."],
-      ["Arah perkembangan informasi dan pengetahuan","Bahas peluang serta tantangan teknologi baru, termasuk kecerdasan buatan, dengan sumber terkini."]
-    ].map(([t,d],i) => '<div style="'+S({display:"flex", gap:"12px", alignItems:"flex-start", padding:"12px 14px", background:"#F8FAFA", borderRadius:"10px", border:"1px solid rgba(11,110,106,0.06)"})+'"><span style="'+S({width:"24px", height:"24px", borderRadius:"8px", background:"#0B6E6A", color:"white", fontSize:"12px", fontWeight:800, display:"inline-flex", alignItems:"center", justifyContent:"center", flexShrink:0})+'">'+(i+1)+'</span><div><div style="'+S({fontSize:"13.5px", fontWeight:700, color:"#0B3B3A", marginBottom:"2px"})+'">'+escapeHtml(t)+'</div><div style="'+S({fontSize:"12.5px", color:"#5B7A78", lineHeight:1.6})+'">'+escapeHtml(d)+'</div></div></div>').join('');
-    const sources = [
-      "Buku atau artikel akademik tentang konsep data, informasi, dan pengetahuan.",
-      "Publikasi lembaga tepercaya mengenai literasi informasi dan literasi digital.",
-      "Artikel penelitian tentang misinformasi, evaluasi sumber, dan berpikir kritis.",
-      "Dokumen resmi atau laporan terbaru mengenai perkembangan teknologi informasi.",
-      "Sumber primer untuk setiap angka, tren, atau contoh kasus yang dimasukkan."
-    ].map(s => '<li style="'+S({fontSize:"13.5px", lineHeight:1.65, color:"#41585A"})+'">'+escapeHtml(s)+'</li>').join('');
-    return '<div style="'+S({padding:"165px 70px 60px"})+'">'
-      + renderDetailDocHeader("Contoh Rancangan Artikel","Memahami Perkembangan Informasi dan Pengetahuan dalam Membentuk Wawasan di Era Modern",[{label:"Penulis",value:"Muhammad Fajri Munawar"},{label:"Sumber",value:"artikel-infotrink.pdf — Bab 7"},{label:"Format",value:"Artikel informatif-analitis"}])
-      + renderDetailSection("Catatan Status Naskah", renderDetailP("Bagian ini merupakan rancangan isi, bukan hasil penelitian atau klaim faktual yang sudah diverifikasi. Rancangan menunjukkan bagaimana kerangka umum pada pedoman diterapkan pada judul artikel yang dipilih, dan rumusan akhirnya harus disesuaikan dengan uraian serta sumber yang benar-benar digunakan."))
-      + renderDetailSection("Arah dan Tujuan Artikel", renderDetailP("Artikel diarahkan untuk menjelaskan perubahan cara informasi diproduksi, disebarkan, diakses, dan dimanfaatkan; membedakan data, informasi, dan pengetahuan; serta menerangkan bagaimana kemampuan memahami dan mengevaluasi informasi dapat membantu pembentukan wawasan."))
-      + renderDetailSection("Rancangan Abstrak", renderDetailP("Abstrak merangkum pentingnya informasi dalam kehidupan modern, tujuan menjelaskan hubungan informasi dan pengetahuan, cakupan pembahasan mengenai transformasi digital dan literasi informasi, serta simpulan bahwa akses informasi perlu disertai kemampuan mengevaluasi dan mengolahnya."))
-      + renderDetailSection("Rancangan Subjudul Pembahasan", '<div style="'+S({display:"flex", flexDirection:"column", gap:"10px"})+'">'+subRows+'</div>')
-      + renderDetailSection("Rancangan Kesimpulan", renderDetailP("Kesimpulan menegaskan bahwa banyaknya informasi tidak otomatis menghasilkan pengetahuan. Informasi perlu dipahami, diperiksa, dibandingkan, dan diolah secara kritis agar dapat membentuk wawasan. Rumusan akhir disesuaikan dengan uraian dan sumber yang benar-benar digunakan."))
-      + renderDetailSection("Sumber yang Perlu Ditelusuri", '<ul style="'+S({margin:0, paddingLeft:"20px", display:"flex", flexDirection:"column", gap:"7px"})+'">'+sources+'</ul>')
-      + '</div>';
-  }
-  // Default: pedoman-artikel detail
-  const toc = ["Pengantar","Karakter dan Tujuan Artikel","Menentukan Topik, Judul, dan Arah Artikel","Struktur Lengkap Artikel","Panduan Menyusun Isi secara Runtut","Penggunaan Data, Kutipan, Tabel, dan Gambar","Template Artikel Siap Diisi","Contoh Rancangan Khusus untuk Judul yang Dipilih","Penyuntingan dan Pemeriksaan Akhir","Catatan Penting tentang Penyesuaian Format"];
-  const tocHtml = '<div style="'+S({display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"8px"})+'">'+toc.map((s,i) => '<div style="'+S({display:"flex", alignItems:"center", gap:"10px", padding:"9px 12px", background:"#F8FAFA", borderRadius:"8px", border:"1px solid rgba(11,110,106,0.06)"})+'"><span style="'+S({fontSize:"11px", fontWeight:800, color:"#0B6E6A", width:"20px", flexShrink:0})+'">'+(i+1)+'.</span><span style="'+S({fontSize:"12.5px", fontWeight:600, color:"#0B3B3A"})+'">'+escapeHtml(s)+'</span></div>').join('')+'</div>';
-  const structure = ["Identitas artikel (judul, penulis, afiliasi, email, tanggal publikasi)","Abstrak — ringkasan konteks, tujuan, dan simpulan utama","Kata kunci — sekitar 3–5 istilah yang mewakili pokok artikel","Pendahuluan — konteks, masalah, tujuan, dan ruang lingkup","Pembahasan utama — subjudul dari konsep dasar menuju uraian mendalam","Analisis atau perspektif — makna, pola, dan hubungan yang lebih luas","Kesimpulan — rangkuman jawaban terhadap tujuan artikel","Rekomendasi, daftar referensi, dan biografi penulis (jika relevan)"];
-  const structureHtml = '<div style="'+S({display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"8px"})+'">'+structure.map((s,i) => '<div style="'+S({display:"flex", alignItems:"flex-start", gap:"10px", padding:"9px 12px", background:"#F8FAFA", borderRadius:"8px", border:"1px solid rgba(11,110,106,0.06)"})+'"><span style="'+S({fontSize:"11px", fontWeight:800, color:"#0B6E6A", flexShrink:0})+'">'+(i+1)+'.</span><span style="'+S({fontSize:"12.5px", fontWeight:600, color:"#0B3B3A", lineHeight:1.5})+'">'+escapeHtml(s)+'</span></div>').join('')+'</div>';
-  const runtut = [["Dari umum ke khusus","Kenalkan konteks luas, lalu persempit ke persoalan yang menjadi fokus."],["Dari dasar ke lanjutan","Jelaskan definisi sebelum membahas penerapan, dampak, atau analisis."],["Sebab dan akibat","Jika menjelaskan dampak, uraikan faktor atau proses yang mendasarinya."],["Klaim dan dukungan","Setiap klaim faktual penting harus memiliki bukti, data, atau sumber yang memadai."],["Transisi antarbab","Gunakan kalimat penghubung agar pembaca memahai hubungan antara satu bagian dan bagian berikutnya."]];
-  const runtutHtml = '<div style="'+S({display:"flex", flexDirection:"column", gap:"8px"})+'">'+runtut.map(([t,d],i) => '<div style="'+S({display:"flex", gap:"12px", alignItems:"flex-start", padding:"10px 14px", background:"#F8FAFA", borderRadius:"10px", border:"1px solid rgba(11,110,106,0.06)"})+'"><span style="'+S({width:"24px", height:"24px", borderRadius:"8px", background:"#0B6E6A", color:"white", fontSize:"12px", fontWeight:800, display:"inline-flex", alignItems:"center", justifyContent:"center", flexShrink:0})+'">'+(i+1)+'</span><div style="'+S({fontSize:"13px", lineHeight:1.6, color:"#41585A"})+'"><b style="'+S({color:"#0B3B3A"})+'">'+escapeHtml(t)+'.</b> '+escapeHtml(d)+'</div></div>').join('')+'</div>';
-  const checklist = ["Judul sudah menggambarkan isi artikel.","Nama penulis sudah benar.","Tujuan dan ruang lingkup sudah jelas.","Abstrak sesuai dengan isi akhir artikel.","Kata kunci relevan dan tidak terlalu umum.","Pendahuluan menjelaskan konteks dan arah pembahasan.","Subjudul tersusun logis dan tidak berulang.","Fakta penting didukung sumber yang dapat diperiksa.","Kutipan dan parafrasa sudah diberi sitasi.","Tabel dan gambar memiliki nomor, judul, serta sumber.","Kesimpulan menjawab tujuan artikel.","Daftar referensi konsisten dengan sitasi dalam teks.","Ejaan, tata bahasa, dan format sudah diperiksa.","Ketentuan penerbit dan hak cipta sudah diperhatikan."];
-  const checklistHtml = '<div style="'+S({display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"8px"})+'">'+checklist.map(c => '<div style="'+S({display:"flex", alignItems:"center", gap:"9px", padding:"8px 12px", background:"#F8FAFA", borderRadius:"8px", border:"1px solid rgba(11,110,106,0.06)"})+'"><span style="'+S({color:"#0B6E6A", fontSize:"13px", fontWeight:800, flexShrink:0})+'">✓</span><span style="'+S({fontSize:"12.5px", color:"#41585A", lineHeight:1.5})+'">'+escapeHtml(c)+'</span></div>').join('')+'</div>';
-  return '<div style="'+S({padding:"165px 70px 60px"})+'">'
-    + renderDetailDocHeader("Pedoman dan Template","Pedoman dan Template Penyusunan Artikel — Media Informasi dan Penjelasan",[{label:"Penulis",value:"Muhammad Fajri Munawar"},{label:"Sumber",value:"artikel-infotrink.pdf — 10 halaman"},{label:"Format",value:"Artikel informatif-analitis"}])
-    + renderDetailSection("Pengantar", renderDetailP("Dokumen ini disusun sebagai pedoman praktis untuk merencanakan, menulis, menyunting, dan menyiapkan artikel informasi dan penjelasan. Isinya menggabungkan penjelasan fungsi setiap bagian artikel, urutan penyusunan, unsur yang perlu dimuat, serta kerangka yang dapat langsung diisi oleh penulis.")+renderDetailP("Format yang digunakan adalah artikel informatif-analitis: artikel bertujuan menyampaikan informasi dan penjelasan secara runtut, sekaligus memberikan analisis yang masuk akal berdasarkan fakta dan sumber yang dapat diperiksa. Format ini berbeda dari artikel penelitian empiris yang biasanya memerlukan metode penelitian, populasi, sampel, instrumen, hasil pengujian, dan hipotesis."))
-    + renderDetailSection("Daftar Isi Dokumen", tocHtml)
-    + renderDetailSection("Karakter dan Tujuan Artikel", renderDetailP("Artikel informasi dan penjelasan adalah tulisan yang menyampaikan fakta, konsep, proses, perkembangan, atau fenomena kepada pembaca dengan bahasa yang jelas dan susunan yang terarah. Penulis tidak hanya menyebutkan informasi, tetapi juga menerangkan konteks, hubungan antargagasan, alasan suatu hal terjadi, serta arti atau dampaknya.")+renderDetailP("Tujuan penulisannya antara lain: memberikan informasi yang relevan dan dapat dipahami pembaca; menjelaskan suatu topik secara runtut dari konsep dasar hingga pembahasan yang lebih luas; membantu pembaca membedakan fakta, penjelasan, interpretasi, dan opini; serta memperluas wawasan melalui informasi yang bersumber jelas."))
-    + renderDetailSection("Struktur Lengkap Artikel", renderDetailP("Susunan berikut merupakan format lengkap yang direkomendasikan. Tidak semua unsur harus selalu ditampilkan — unsur opsional digunakan jika relevan atau diminta oleh media penerbit.")+structureHtml)
-    + renderDetailSection("Panduan Menyusun Isi secara Runtut", runtutHtml)
-    + renderDetailSection("Daftar Periksa Sebelum Publikasi", checklistHtml)
-    + renderDetailSection("Catatan Penting tentang Penyesuaian Format", renderDetailP("Tidak ada satu format artikel yang berlaku mutlak untuk semua penerbit. Media populer, portal informasi, jurnal ilmiah, dan prosiding dapat menetapkan susunan yang berbeda. Karena itu, dokumen ini berfungsi sebagai pedoman dan template dasar, bukan pengganti pedoman resmi penerbit.")+renderDetailP("Untuk artikel informasi dan penjelasan, abstrak dapat digunakan sebagai ringkasan editorial, tetapi tidak selalu diwajibkan. Metode penelitian, hipotesis, populasi, sampel, uji validitas, dan uji statistik tidak perlu ditambahkan apabila tulisan bukan laporan penelitian empiris."))
-    + '</div>';
-}
-
-/* ===== MEDIA DIGITAL PAGE ===== */
+/* ===== MEDIA DIGITAL PAGE (Informasi > Media Digital) =====
+   Halaman Media Sosial — satu-satunya sub-menu dengan isi. */
 function renderMediaDigital(){
   const sosialCards = PLATFORMS_SOSIAL.map(p =>
     '<div class="hover-card" style="'+S({background:"white", borderRadius:"16px", padding:"24px 16px", textAlign:"center", cursor:"pointer", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 4px 12px rgba(11,59,58,0.06)"})+'">'
@@ -745,211 +629,93 @@ function renderMediaDigital(){
     + '</div></div>';
 }
 
-/* ===== MENGENAL INFOTRINK — 5 sub-pages ===== */
-function renderMengenalInfotrinkPage(submenu){
-  if(submenu === "Pengenalan INFOTRINK") return renderPengenalanInfotrink();
-  if(submenu === "Latar Belakang") return renderLatarBelakang();
-  if(submenu === "Tujuan dan Fungsi") return renderTujuanFungsi();
-  if(submenu === "Ruang Lingkup") return renderRuangLingkup();
-  if(submenu === "Prinsip Pengelolaan") return renderPrinsipPengelolaan();
-  return renderMateriUmum("Mengenal INFOTRINK", submenu);
-}
-
-function renderPengenalanInfotrink(){
-  const cards = [["Dirangkum dari Awal Mula","Materi dirangkum mulai dari awal mula, perencanaan, sampai perwujudan dan pengembangannya — tidak berhenti pada hasil akhirnya saja."],["Tertata dan Terus Diperbarui","Semuanya tertata rapi dalam satu wadah terstruktur; setiap kemajuan ditambahkan dan setiap perubahan diperbarui."],["Siap Ditelusuri Kembali","Setiap catatan siap dijelajahi dan dimanfaatkan kembali kapan saja oleh siapa pun yang ingin memahaminya."]];
-  const cardsHtml = '<div style="'+S({display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:"16px"})+'">'+cards.map(([t,d]) => '<div style="'+S({background:"white", borderRadius:"16px", padding:"22px 24px", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 2px 8px rgba(11,59,58,0.04)"})+'"><h4 style="'+S({fontSize:"15px", fontWeight:800, color:"#0B3B3A", margin:"0 0 8px 0"})+'">'+escapeHtml(t)+'</h4><p style="'+S({fontSize:"13px", lineHeight:1.7, color:"#5B7A78", margin:0, textAlign:"justify", textJustify:"inter-word"})+'">'+escapeHtml(d)+'</p></div>').join('')+'</div>';
-  return '<div style="'+S({padding:"165px 70px 60px"})+'">'
-    + renderPageIntro("Pengenalan INFOTRINK","INFOTRINK adalah sebuah wadah yang menghimpun informasi dan dokumentasi di beragam bidang — bukan profil perusahaan atau lembaga. Halaman ini menjelaskan konsep dan keberadaannya: tempat perjalanan gagasan dan karya diperkenalkan melalui informasi dan dokumentasi.")
-    + renderFeatureRow("slide/pengenalan-hero.png","Ilustrasi buku terbuka dengan lembaran dokumen yang terhimpun","Satu Wadah untuk Perjalanan Gagasan dan Karya","INFOTRINK menghimpun informasi dan dokumentasi di beragam bidang, dirangkum mulai dari awal mula, perencanaan, sampai perwujudan dan pengembangannya — semuanya tertata rapi dan terus diperbarui, sehingga perjalanan di balik setiap gagasan dan karya dapat dikenali dengan jelas. Setiap catatan memuat konteks dan tahapan perkembangannya sehingga siap dijelajahi dan dimanfaatkan kembali kapan saja.")
-    + renderFeatureRow("slide/pengenalan-pilar.png","Ilustrasi tiga pilar: personal growth, social, dan profesional dalam satu struktur pengetahuan","Tiga Pilar dalam Satu Struktur Pengetahuan","Sebagaimana ditunjukkan ilustrasinya, pengembangan wadah ini berdiri di atas tiga pilar — pertumbuhan pribadi (personal growth), sosial (social), dan profesional — yang tersusun dalam satu struktur pengetahuan (knowledge structure). Ketiganya menjadi arah penghimpunan materi agar setiap bidang yang didokumentasikan berkembang secara berimbang dan saling menguatkan.", true)
-    + cardsHtml + '</div>';
-}
-
-function renderLatarBelakang(){
-  return '<div style="'+S({padding:"165px 70px 60px"})+'">'
-    + renderPageIntro("Latar Belakang","Halaman ini menjelaskan alasan keberadaan INFOTRINK — mengapa sebuah wadah dokumentasi dirasa perlu, dan untuk apa ia dijaga.")
-    + renderFeatureRow("slide/latar-jalan.png","Ilustrasi jejak langkah menelusuri sebuah jalan menuju cahaya","Setiap Pembangunan Mempunyai Awal","Keyakinan sederhana itulah yang melatarbelakangi INFOTRINK: hampir semua hal yang berdiri hari ini bermula dari sebuah gagasan yang dirumuskan dan dirancang sebelum akhirnya diwujudkan sedikit demi sedikit. Atas dasar itu, perjalanan pada berbagai lini dicatat sesuai tahapannya, mulai dari perencanaan dan perintisan, berlanjut ke perwujudan dan pelaksanaan, hingga pengelolaan dan pengembangannya.")
-    + renderFeatureRow("slide/latar-jejak.png","Ilustrasi jejak cahaya yang bertemu dan menyatu di satu titik","Awal yang Tidak Berakhir sebagai Kenangan","Berbeda dengan unggahan yang cepat berganti atau pemberitaan yang mudah berlalu, dokumentasi semacam ini disusun untuk bertahan lebih lama: setiap kemajuan ditambahkan, setiap perubahan diperbarui, agar yang terbaca selalu sesuai keadaan terkininya dan tidak berhenti pada versi lama. Dengan cara itulah sebuah awal tidak berakhir sebagai kenangan, melainkan terus hidup sebagai catatan yang berguna, baik bagi pihak yang melanjutkan perjalanannya maupun bagi siapa pun yang ingin memahami dari mana semuanya dimulai.", true)
-    + '</div>';
-}
-
-function renderTujuanFungsi(){
-  const funcs = [["Menghimpun","Informasi dan dokumentasi di beragam bidang dikumpulkan dalam satu wadah yang terstruktur."],["Merangkum","Setiap materi dirangkum mulai dari awal mula, perencanaan, sampai perwujudan dan pengembangannya."],["Memperbarui","Setiap kemajuan ditambahkan dan setiap perubahan diperbarui agar yang terbaca selalu sesuai keadaan terkini."],["Menyajikan Kembali","Setiap catatan siap dijelajahi dan dimanfaatkan kembali kapan saja oleh pembacanya."]];
-  const funcsHtml = '<div style="'+S({display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"14px"})+'">'+funcs.map(([t,d],i) => '<div style="'+S({background:"#F8FAFA", borderRadius:"12px", padding:"18px 16px", border:"1px solid rgba(11,110,106,0.06)", position:"relative"})+'"><span style="'+S({display:"inline-flex", width:"26px", height:"26px", borderRadius:"8px", background:"#0B6E6A", color:"white", fontSize:"13px", fontWeight:800, alignItems:"center", justifyContent:"center", marginBottom:"10px"})+'">'+(i+1)+'</span><h4 style="'+S({fontSize:"14.5px", fontWeight:800, color:"#0B3B3A", margin:"0 0 6px 0"})+'">'+escapeHtml(t)+'</h4><p style="'+S({fontSize:"12.5px", lineHeight:1.65, color:"#5B7A78", margin:0, textAlign:"justify", textJustify:"inter-word"})+'">'+escapeHtml(d)+'</p></div>').join('')+'</div>';
-  return '<div style="'+S({padding:"165px 70px 60px"})+'">'
-    + renderPageIntro("Tujuan dan Fungsi",'Halaman ini menjawab pertanyaan "untuk apa" INFOTRINK ada: arah yang dituju dan fungsi yang dijalankan sebagai sebuah wadah dokumentasi.')
-    + renderFeatureRow("slide/tujuan-arah.png","Ilustrasi penunjuk arah dengan gelombang yang menyejajarkan fokus","Arah: Membuat Perjalanan Setiap Gagasan Dapat Dikenali","INFOTRINK diarahkan untuk menjelaskan, bukan menggantikan peran. Penyajiannya dibuat jujur pada posisinya: yang masih berupa gagasan diperkenalkan sebagai gagasan, sedangkan yang sudah berjalan dipaparkan sebagaimana perkembangannya, tanpa diperbesar dan tanpa diperkecil. Yang tersaji di sini hanyalah gambaran, uraian, dan tautan yang mengarah pada sumbernya, bukan pengganti dari peran resminya.")
-    + '<div style="'+S({background:"white", borderRadius:"16px", padding:"24px 28px", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 2px 8px rgba(11,59,58,0.04)"})+'">'
-    + '<h3 style="'+S({fontSize:"17px", fontWeight:800, color:"#0B3B3A", margin:"0 0 6px 0", display:"flex", alignItems:"center", gap:"10px"})+'"><span style="'+S({width:"4px", height:"18px", borderRadius:"2px", background:"#0B6E6A", display:"inline-block", flexShrink:0})+'"></span>Fungsi: Empat Peran Wadah</h3>'
-    + '<p style="'+S({fontSize:"13.5px", color:"#5B7A78", margin:"0 0 16px 0", lineHeight:1.7, textAlign:"justify", textJustify:"inter-word"})+'">Sebagai wadah, INFOTRINK menjalankan empat fungsi yang saling menyambung dari awal mula hingga pemanfaatan kembali.</p>'
-    + funcsHtml + '</div></div>';
-}
-
-function renderRuangLingkup(){
-  return '<div style="'+S({padding:"165px 70px 60px"})+'">'
-    + renderPageIntro("Ruang Lingkup",'Halaman ini menjawab pertanyaan "sampai mana" cakupan INFOTRINK: apa yang masuk di dalamnya, apa yang berada di luarnya, dan seberapa dalam penyajiannya.')
-    + renderFeatureRow("slide/ruang-boundary.png","Ilustrasi riak air dengan lingkaran batas yang beraturan","Batas yang Dijaga Jelas","Kedudukan wadah dijaga dengan batas yang jelas. INFOTRINK tidak berperan sebagai pihak yang memiliki atau membawahi apa yang diperkenalkan, dan setiap hal tetap berada di bawah pengelolaan pihaknya masing-masing. Seperti riak yang mempunyai lingkar teratur, yang tersaji di sini hanyalah gambaran, uraian, dan tautan yang mengarah pada sumbernya, bukan pengganti dari peran resminya.")
-    + renderFeatureRow("slide/ruang-kedalaman.png","Ilustrasi undakan bertingkat yang menggambarkan kedalaman bertahap","Kedalaman yang Berundak","Penyajian dibuat berundak sebagaimana tahapannya: dimulai dari perencanaan dan perintisan, berlanjut ke perwujudan dan pelaksanaan, hingga pengelolaan dan pengembangannya. Setiap catatan memuat konteks dan tahapan perkembangannya, sehingga pembaca dapat menelusuri seberapa jauh sebuah hal telah berjalan.", true)
-    + renderChipStrip("Bidang yang Dihimpun",["Media Digital","Pembangunan","Personal","Bidang Lainnya"])
-    + renderChipStrip("Jenis Materi",["Media Informasi","Hasil Riset","Kajian & Analisis","Laporan","Data & Referensi","Gagasan"])
-    + '</div>';
-}
-
-function renderPrinsipPengelolaan(){
-  const tahapan = ["Menghimpun","Menyusun","Memperbarui","Menyajikan Kembali"];
-  const tahapanHtml = '<div style="'+S({display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"14px"})+'">'+tahapan.map((t,i) => '<div style="'+S({background:"#F8FAFA", borderRadius:"12px", padding:"16px", border:"1px solid rgba(11,110,106,0.06)", textAlign:"center"})+'"><span style="'+S({display:"inline-flex", width:"28px", height:"28px", borderRadius:"50%", background:"#0B6E6A", color:"white", fontSize:"13px", fontWeight:800, alignItems:"center", justifyContent:"center", marginBottom:"8px"})+'">'+(i+1)+'</span><div style="'+S({fontSize:"14px", fontWeight:800, color:"#0B3B3A"})+'">'+escapeHtml(t)+'</div>'+(i<3?'<div style="'+S({fontSize:"12px", color:"#9CB3B0", marginTop:"4px"})+'">→</div>':'')+'</div>').join('')+'</div>';
-  return '<div style="'+S({padding:"165px 70px 60px"})+'">'
-    + renderPageIntro("Prinsip Pengelolaan",'Halaman ini menjawab pertanyaan "bagaimana" INFOTRINK dikelola: prinsip yang dipegang dan siklus kerja yang dijalankan agar wadah tetap rapi dan terkini.')
-    + renderFeatureRow("slide/prinsip-prisma.png","Ilustrasi prisma yang menguraikan cahaya menjadi berbagai sisi","Jujur pada Posisinya","Seperti cahaya yang diuraikan oleh prisma, satu materi dibaca dari sisi-sisinya: konteksnya, tahapan perkembangannya, dan kedudukannya disampaikan apa adanya. Penyajiannya dibuat jujur pada posisinya, tanpa diperbesar dan tanpa diperkecil, sehingga pembaca dapat membedakan mana yang masih berupa gagasan dan mana yang sudah berjalan.")
-    + renderFeatureRow("slide/prinsip-siklus.png","Ilustrasi undakan spiral yang berputar menggambarkan siklus berkelanjutan","Siklus Pengelolaan Berkelanjutan","Dokumentasi tidak berhenti pada versi lama. Materi dihimpun dan disusun sesuai tahapannya, diperbarui mengikuti perkembangan terkini, lalu disajikan kembali dalam tatanan yang rapi — begitu seterusnya seperti undakan yang berputar. Dengan cara itu, yang terbaca selalu sesuai keadaan terkininya.", true)
-    + '<div style="'+S({background:"white", borderRadius:"16px", padding:"24px 28px", marginBottom:"20px", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 2px 8px rgba(11,59,58,0.04)"})+'"><h3 style="'+S({fontSize:"16px", fontWeight:800, color:"#0B3B3A", margin:"0 0 16px 0"})+'">Empat Tahap Siklus Pengelolaan</h3>'+tahapanHtml+'</div>'
-    + '<div style="'+S({background:"rgba(11,110,106,0.06)", borderRadius:"16px", padding:"20px 26px", border:"1px dashed rgba(11,110,106,0.25)"})+'"><p style="'+S({fontSize:"13.5px", color:"#41585A", margin:0, lineHeight:1.65, textAlign:"justify", textJustify:"inter-word"})+'">INFOTRINK dikelola sebagai sebuah <b>wadah</b>, bukan profil perusahaan atau lembaga — setiap hal yang diperkenalkan tetap berada di bawah pengelolaan pihaknya masing-masing.</p></div>'
-    + '</div>';
-}
-
-/* ===== MATERI UMUM (Galeri & fallback for other submenus) ===== */
-function renderMateriUmum(menu, submenu){
-  const isGaleri = (menu === "Galeri");
-  let introText;
-  if(isGaleri){
-    introText = "Arsip visual dan dokumentasi. Bagian ini menyajikan potret kegiatan dan dokumentasi yang mengiringi materi INFOTRINK.";
-  } else if(menu === "Publikasi"){
-    introText = "Pusat seluruh konten yang diterbitkan. Bagian "+submenu+" menghimpun dokumen dengan jenis materi tersebut; dokumen yang telah terbit saat ini dapat ditelusuri pada Media Informasi & Penjelasan.";
-  } else {
-    introText = "Pengelompokan informasi berdasarkan bidang. Bagian "+submenu+" menghimpun dokumentasi pada bidang tersebut, dirangkum mulai dari awal mula, perencanaan, sampai perwujudan dan pengembangannya.";
+/* ===== NAV HIGHLIGHT (no re-render; toggles .on class) ===== */
+function updateNavHighlight(){
+  const slide = getSlide();
+  if(!slide) return;
+  const links = slide.querySelectorAll('.nav-link');
+  for(let i=0; i<links.length; i++){
+    const item = links[i].getAttribute('data-nav');
+    const isActive = state.activeMenu === item;
+    const isLastActive = !state.activeMenu && state.lastActiveMenu === item;
+    const isDefaultBeranda = item === "Beranda" && !state.activeMenu && !state.lastActiveMenu;
+    links[i].classList.toggle('on', !!(isActive || isLastActive || isDefaultBeranda));
   }
-  const items = (SUB_MENUS[menu] && SUB_MENUS[menu].items) ? SUB_MENUS[menu].items : [];
-  const tersedia = (menu === "Publikasi" && submenu === "Media Informasi & Penjelasan") || (menu === "Informasi" && submenu === "Media Digital");
-
-  let galeriHtml = '';
-  if(isGaleri){
-    galeriHtml = '<div style="'+S({display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:"16px", marginBottom:"28px"})+'">'+GALERI_ARSIP.map(g => '<div style="'+S({background:"white", borderRadius:"16px", overflow:"hidden", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 4px 12px rgba(11,59,58,0.06)"})+'"><img src="'+escapeAttr(g.src)+'" alt="'+escapeAttr(g.caption)+'" style="'+S({width:"100%", height:"200px", objectFit:"cover", display:"block"})+'"><div style="'+S({padding:"12px 16px", fontSize:"12.5px", fontWeight:700, color:"#0B3B3A"})+'">'+escapeHtml(g.caption)+'</div></div>').join('')+'</div>';
-  }
-  let pendingHtml = '';
-  if(!isGaleri && !tersedia){
-    pendingHtml = '<div style="'+S({background:"rgba(11,110,106,0.06)", borderRadius:"16px", padding:"24px 28px", border:"1px dashed rgba(11,110,106,0.25)", display:"flex", alignItems:"center", gap:"18px", marginBottom:"28px"})+'">'
-      + '<div style="'+S({width:"44px", height:"44px", borderRadius:"12px", background:"rgba(11,110,106,0.12)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, fontSize:"20px"})+'">⏳</div>'
-      + '<div style="'+S({flex:1})+'"><h3 style="'+S({fontSize:"15.5px", fontWeight:800, color:"#0B3B3A", margin:"0 0 4px 0"})+'">Menanti Publikasi</h3><p style="'+S({fontSize:"13px", color:"#5B7A78", margin:0, lineHeight:1.65, textAlign:"justify", textJustify:"inter-word"})+'">Dokumen untuk bagian ini menanti publikasi. Materi yang telah terbit dapat ditelusuri terlebih dahulu di bawah ini.</p></div>'
-      + '<button onclick="openSubmenu(\'Publikasi\', \''+escapeAttr(SUB_MENUS["Publikasi"].items[0])+'\')" style="'+S({padding:"11px 20px", background:"#0B6E6A", color:"white", border:"none", borderRadius:"999px", fontSize:"13px", fontWeight:700, cursor:"pointer", flexShrink:0, whiteSpace:"nowrap"})+'">Lihat Media Informasi →</button>'
-      + '</div>';
-  }
-  let otherItemsHtml = '';
-  if(items.length > 0){
-    const filtered = items.filter(it => it !== submenu);
-    if(filtered.length > 0){
-      const heading = menu === "Publikasi" ? "Jenis Materi Lainnya" : (menu === "Informasi" ? "Bidang Lainnya" : "Bagian Galeri Lainnya");
-      const cards = filtered.map(item => {
-        const itemTersedia = (menu === "Publikasi" && item === "Media Informasi & Penjelasan") || (menu === "Informasi" && item === "Media Digital");
-        return '<div class="hover-card-sm" onclick="openSubmenu(\''+escapeAttr(menu)+'\', \''+escapeAttr(item)+'\')" style="'+S({display:"flex", alignItems:"center", justifyContent:"space-between", gap:"12px", padding:"16px 18px", background:"white", borderRadius:"12px", border:"1px solid rgba(11,110,106,0.06)", boxShadow:"0 2px 8px rgba(11,59,58,0.04)", cursor:"pointer"})+'"><div><div style="'+S({fontSize:"14px", fontWeight:700, color:"#0B3B3A"})+'">'+brandText(item)+'</div><div style="'+S({fontSize:"11px", color: itemTersedia?"#0B6E6A":"#9CB3B0", fontWeight:700, marginTop:"2px"})+'">'+(itemTersedia?"Tersedia — lihat materi →":"Menanti publikasi →")+'</div></div></div>';
-      }).join('');
-      otherItemsHtml = '<div><h3 style="'+S({fontSize:"16px", fontWeight:800, color:"#0B3B3A", margin:"0 0 14px 0"})+'">'+escapeHtml(heading)+'</h3><div style="'+S({display:"grid", gridTemplateColumns:"repeat(3, 1fr)", gap:"14px"})+'">'+cards+'</div></div>';
-    }
-  }
-  return '<div style="'+S({padding:"165px 70px 60px"})+'">'
-    + renderPageIntro(submenu, introText)
-    + galeriHtml + pendingHtml + otherItemsHtml
-    + '</div>';
 }
 
 /* ===== EVENT HANDLERS ===== */
 function navClick(item, ev){
   if(ev){ ev.preventDefault(); }
   if(item === "Beranda"){
-    if(state.activeMenu){
-      const cm = state.activeMenu;
-      state.closingMenu = cm;
-      setTimeout(function(){ if(state.closingMenu === cm) state.closingMenu = null; renderOverlaysOnly(); }, 1500);
-    }
-    state.activeMenu = null;
+    if(state.view === 'submenu'){ backToBeranda(); return false; }
+    if(state.activeMenu) closeOverlay();
     state.lastActiveMenu = "Beranda";
-    state.view = 'beranda';
-    state.menu = null; state.submenu = null; state.article = null;
+    updateNavHighlight();
     scrollTop();
-    fullRender();
     return false;
   }
+  const slide = getSlide();
+  if(!slide) return false;
   if(state.activeMenu === item){
-    // close this menu
-    state.closingMenu = item;
-    setTimeout(function(){ if(state.closingMenu === item) state.closingMenu = null; renderOverlaysOnly(); }, 1500);
-    state.activeMenu = null;
-    state.lastActiveMenu = item;
-  } else if(state.activeMenu === null){
-    // open
-    measureNavPositions();
-    state.activeMenu = item;
-    state.lastActiveMenu = item;
-    requestAnimationFrame(function(){ measureNavPositions(); renderOverlaysOnly(); });
-  } else {
-    // Different menu is open — close current, then open new one
-    const cm = state.activeMenu;
-    state.closingMenu = cm;
-    setTimeout(function(){ if(state.closingMenu === cm) state.closingMenu = null; renderOverlaysOnly(); }, 1500);
-    state.activeMenu = null;
-    measureNavPositions();
-    state.activeMenu = item;
-    state.lastActiveMenu = item;
-    requestAnimationFrame(function(){ measureNavPositions(); renderOverlaysOnly(); });
+    // Klik nav yang sama lagi → tutup menunya
+    closeOverlay();
+    return false;
   }
-  renderOverlaysOnly();
+  // Tutup overlay lain yang sedang terbuka (animasi tutup jalan sendiri)
+  if(state.activeMenu){
+    const oldOv = slide.querySelector(ovSelector(state.activeMenu));
+    if(oldOv) oldOv.classList.remove('open');
+  }
+  // Pastikan posisi garis L memakai X nav terukur, LALU buka (animasi jalan)
+  measureNavPositions();
+  state.activeMenu = item;
+  state.lastActiveMenu = item;
+  const ov = slide.querySelector(ovSelector(item));
+  if(ov) ov.classList.add('open');
+  slide.classList.add('menu-open');
+  updateNavHighlight();
   return false;
 }
 
 function closeOverlay(){
-  if(state.activeMenu){
-    state.closingMenu = state.activeMenu;
-    const cm = state.activeMenu;
-    setTimeout(function(){ if(state.closingMenu === cm) state.closingMenu = null; renderOverlaysOnly(); }, 1500);
-  }
+  if(!state.activeMenu) return;
+  const slide = getSlide();
+  const ov = slide.querySelector(ovSelector(state.activeMenu));
+  if(ov) ov.classList.remove('open');
+  slide.classList.remove('menu-open');
   state.activeMenu = null;
-  renderOverlaysOnly();
+  updateNavHighlight();
 }
 
 function openSubmenu(menu, submenu){
-  // close overlay first (with closing animation)
+  // Jika overlay sedang terbuka, tutup dulu dengan animasi, lalu pindah halaman
   if(state.activeMenu){
-    state.closingMenu = state.activeMenu;
-    const cm = state.activeMenu;
-    setTimeout(function(){ if(state.closingMenu === cm) state.closingMenu = null; renderOverlaysOnly(); }, 1500);
+    closeOverlay();
+    setTimeout(function(){ doOpenSubmenu(menu, submenu); }, 480);
+    return;
   }
-  state.activeMenu = null;
+  doOpenSubmenu(menu, submenu);
+}
+
+function doOpenSubmenu(menu, submenu){
   state.view = 'submenu';
   state.menu = menu;
   state.submenu = submenu;
-  state.article = null;
+  state.activeMenu = null;
+  state.lastActiveMenu = menu; // nav tetap menyorot menu induknya
   scrollTop();
   fullRender();
 }
 
 function openSubmenuFromFooter(menu, submenu){
-  // Reset closing state when coming from footer (no overlay was open)
-  state.closingMenu = null;
-  state.activeMenu = null;
-  state.view = 'submenu';
-  state.menu = menu;
-  state.submenu = submenu;
-  state.article = null;
-  scrollTop();
-  fullRender();
+  doOpenSubmenu(menu, submenu);
   return false;
-}
-
-function selectArticle(slug){
-  state.article = slug;
-  scrollTop();
-  fullRender();
-}
-
-function backToList(){
-  state.article = null;
-  scrollTop();
-  fullRender();
 }
 
 function backToBeranda(){
   state.view = 'beranda';
-  state.menu = null; state.submenu = null; state.article = null;
-  state.activeMenu = null; state.closingMenu = null;
+  state.menu = null; state.submenu = null;
+  state.activeMenu = null; state.lastActiveMenu = null;
   scrollTop();
   fullRender();
 }
@@ -968,6 +734,7 @@ function fullRender(){
     content.innerHTML = renderSubmenuPage();
   }
   applyZoom();
+  updateNavHighlight();
   // Defer height/position measurements until after paint.
   requestAnimationFrame(function(){
     measureContentHeight();
@@ -975,27 +742,7 @@ function fullRender(){
   });
 }
 
-// Re-render only the overlays (so nav clicks don't disturb Beranda sections scroll)
-function renderOverlaysOnly(){
-  const slide = document.querySelector('[data-slide-content]');
-  if(!slide) return;
-  // Remove existing overlay-menu nodes
-  const existing = slide.querySelectorAll('.overlay-menu');
-  for(let i=0; i<existing.length; i++) existing[i].remove();
-  // Build new overlays HTML and append at end of slide content.
-  // (Stacking is governed by zIndex on inner SVG/box/X — DOM order is fine.)
-  let html = '';
-  for(const menuKey of Object.keys(SUB_MENUS)){
-    html += renderOverlay(menuKey);
-  }
-  const tmp = document.createElement('div');
-  tmp.innerHTML = html;
-  while(tmp.firstChild){
-    slide.appendChild(tmp.firstChild);
-  }
-}
-
-/* ===== SCALE / ZOOM (mimics CSS zoom from the React source) ===== */
+/* ===== SCALE / ZOOM ===== */
 function updateScale(){
   const el = document.getElementById('container');
   if(!el) return;
@@ -1022,7 +769,7 @@ function measureContentHeight(){
 function measureNavPositions(){
   const el = document.getElementById('container');
   if(!el) return;
-  const slideEl = document.querySelector('[data-slide-content]');
+  const slideEl = getSlide();
   if(!slideEl) return;
   const slideRect = slideEl.getBoundingClientRect();
   const currentScale = slideRect.width / 1280;
@@ -1041,7 +788,7 @@ function measureNavPositions(){
   updateOverlayPositions();
 }
 function updateOverlayPositions(){
-  const slideEl = document.querySelector('[data-slide-content]');
+  const slideEl = getSlide();
   if(!slideEl) return;
   const overlays = slideEl.querySelectorAll('.overlay-menu');
   for(let i=0; i<overlays.length; i++){
@@ -1092,8 +839,6 @@ if(document.readyState === 'loading'){
 } else {
   init();
 }
-
-
 
 </script>
 </body>
