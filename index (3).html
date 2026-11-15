@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Infotrink</title>
+<meta name="description" content="INFOTRINK — satu wadah untuk perjalanan gagasan dan berbagai karya. Menghimpun informasi dan dokumentasi di beragam bidang, dirangkum dari awal mula hingga pengembangannya.">
+<meta name="theme-color" content="#81F6EF">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="apple-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;
+  background:#81F6EF;color:#0B3B3A;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow:hidden;
+}
+#container{
+  position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;
+  background:linear-gradient(180deg,#81F6EF 0%,#9CF4ED 22%,#B2FBF6 45%,#CFFCF6 68%,#E1FFFD 88%,#E8FEFC 100%);
+}
+/* Saat daftar isi terbuka, kunci scroll agar fokus hanya ke menu daftar isi */
+body.menu-locked #container{overflow:hidden}
+#wrapper{width:100%;position:relative;overflow:hidden;background:transparent}
+#content{position:absolute;top:0;left:0;width:1280px;transform-origin:top left}
+@keyframes infotrinkMarqueeHero{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes infotrinkMarquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.hover-card{transition:transform .2s ease,box-shadow .2s ease}
+.hover-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(11,59,58,.12)}
+.hover-card-sm{transition:transform .2s ease;text-decoration:none}
+.hover-card-sm:hover{transform:translateY(-2px)}
+.nav-link{
+  font-family:'Open Sans',sans-serif;font-size:15px;font-weight:600;color:#0B3B3A;
+  text-decoration:none;padding:4px 0;border-bottom:2px solid transparent;letter-spacing:.2px;
+  cursor:pointer;display:inline-block;transition:color .2s ease,border-color .2s ease;
+}
+.nav-link:hover{color:#0B6E6A}
+.nav-link.on{font-weight:700;color:#0B6E6A;border-bottom-color:#0B6E6A}
+/* ===== DAFTAR ISI OVERLAY =====
+   Garis L selalu mulai dari POSISI nav item sebenarnya (diukur via JS),
+   bukan titik klik. Animasi murni CSS via class .open.
+   Membuka: titik -> garis -> kotak -> judul -> kartu berurutan -> X.
+   Menutup: semua kembali serentak, disembunyikan setelah .9s. */
+.overlay-menu{position:absolute;inset:0;visibility:hidden;pointer-events:none;transition:visibility 0s linear .9s}
+.overlay-menu.open{visibility:visible;transition-delay:0s}
+.overlay-menu.open .ov-box,.overlay-menu.open .ov-x{pointer-events:auto}
+.ov-svg{position:absolute;inset:0;pointer-events:none;z-index:20}
+.ov-dot-start,.ov-dot-end{
+  fill:#0B6E6A;opacity:0;transform:scale(0);transform-origin:center;transform-box:fill-box;
+  transition:opacity .25s ease,transform .25s ease;
+}
+.overlay-menu.open .ov-dot-start{opacity:1;transform:scale(1);transition-delay:.05s}
+.ov-line{
+  stroke:#0B6E6A;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .45s ease;
+}
+.overlay-menu.open .ov-line{stroke-dashoffset:0;transition-delay:.1s}
+.overlay-menu.open .ov-dot-end{opacity:1;transform:scale(1);transition-delay:.4s}
+.ov-box{
+  position:absolute;left:70px;top:150px;width:1140px;height:530px;
+  background:rgba(255,255,255,0.97);border-radius:0 0 16px 16px;
+  box-shadow:0 8px 32px rgba(11,59,58,0.18);z-index:15;padding:36px 44px;overflow:hidden;
+  opacity:0;transform:scaleY(0);transform-origin:center top;transition:opacity .4s ease,transform .4s ease;
+}
+.overlay-menu.open .ov-box{opacity:1;transform:scaleY(1);transition-delay:.25s}
+.ov-head{opacity:0;transform:translateY(10px);transition:opacity .3s ease,transform .3s ease}
+.overlay-menu.open .ov-head{opacity:1;transform:translateY(0);transition-delay:.45s}
+.ov-h2{font-size:30px;font-weight:800;color:#0B3B3A;margin:0;letter-spacing:-.3px}
+.ov-desc{font-size:15px;color:#5B7A78;margin:6px 0 0 0;font-weight:500}
+.ov-divider{
+  height:2px;background:linear-gradient(90deg,#0B6E6A 0%,rgba(11,110,106,0.1) 100%);
+  margin:18px 0 24px 0;opacity:0;transform:scaleX(0);transform-origin:left center;
+  transition:opacity .25s ease,transform .35s ease;
+}
+.overlay-menu.open .ov-divider{opacity:1;transform:scaleX(1);transition-delay:.5s}
+.ov-cards{display:flex;gap:14px;flex-wrap:wrap}
+.ov-card{
+  width:182px;padding:18px 16px;background:linear-gradient(135deg,#F0FAF8 0%,#DCF3EC 100%);
+  border-radius:12px;border:1px solid rgba(11,110,106,0.12);
+  opacity:0;transform:translateY(20px);transition:opacity .35s ease,transform .35s ease;
+}
+.overlay-menu.open .ov-card{opacity:1;transform:translateY(0);transition-delay:var(--d,0s)}
+.ov-num{display:inline-block;font-size:11px;font-weight:700;color:#0B6E6A;background:rgba(11,110,106,0.1);padding:3px 8px;border-radius:6px;margin-bottom:10px;letter-spacing:.5px}
+.ov-title{font-size:15px;font-weight:700;color:#0B3B3A;min-height:38px;line-height:1.3}
+.ov-btn{
+  display:inline-flex;align-items:center;gap:5px;padding:6px 14px;background:#0B6E6A;color:#fff;
+  border:none;border-radius:999px;font-family:'Open Sans',sans-serif;font-size:11px;font-weight:700;
+  cursor:pointer;margin-top:12px;letter-spacing:.3px;transition:background .2s ease,transform .2s ease;text-decoration:none;
+}
+.ov-btn:hover{background:#0B3B3A;transform:translateX(2px)}
+.ov-x{
+  position:absolute;left:1154px;top:166px;width:38px;height:38px;border-radius:50%;
+  background:#0B3B3A;color:#fff;border:none;font-family:'Open Sans',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:18;
+  opacity:0;transform:scale(0) rotate(-90deg);box-shadow:0 4px 12px rgba(11,59,58,0.25);
+  transition:opacity .25s ease,transform .25s ease,background .2s ease;
+}
+.overlay-menu.open .ov-x{opacity:1;transform:scale(1) rotate(0deg);transition-delay:.55s}
+.overlay-menu.open .ov-x:hover{background:#d32f2f;transform:scale(1.1) rotate(0deg);transition-delay:0s}
+.hero-dim{transition:opacity .3s ease}
+.slide-root.menu-open .hero-dim{opacity:.22;pointer-events:none}
+</style>
+</head>
+<body>
+<main id="container">
+  <div id="wrapper">
+    <div id="content"></div>
+  </div>
+</main>
+<script>
+(function(){
+"use strict";
+
+var state = { view:'beranda', activeMenu:null, lastActiveMenu:null, scale:0, contentHeight:0, navPositions:{} };
+
+var NAV_ITEMS = ["Beranda","Publikasi","Informasi","Galeri","Mengenal INFOTRINK"];
+var SUB_MENUS = {
+  Publikasi:{ description:"Pusat seluruh konten yang diterbitkan.", items:["Media Informasi & Penjelasan","Hasil Riset dan Penelitian","Kajian dan Analisis","Laporan & Catatan Perkembangan","Data dan Referensi","Gagasan & Konsep Pengembangan"] },
+  Informasi:{ description:"Pengelompokan informasi berdasarkan bidang.", items:["Media Digital","Pembangunan","Personal","Bidang lainnya"] },
+  Galeri:{ description:"Arsip visual dan dokumentasi.", items:["Dokumentasi riset","Dokumentasi media digital","Dokumentasi pembangunan","Dokumentasi personal","Visual dan infografis"] },
+  "Mengenal INFOTRINK":{ description:"Menjelaskan konsep dan keberadaan INFOTRINK sebagai sebuah wadah, bukan profil perusahaan atau lembaga.", items:["Pengenalan INFOTRINK","Latar Belakang","Tujuan dan Fungsi","Ruang Lingkup","Prinsip Pengelolaan"] }
+};
+var NAV_X = { Beranda:820, Publikasi:910, Informasi:1000, Galeri:1085, "Mengenal INFOTRINK":1190 };
+var LINE_START_Y=78, LINE_TURN_Y=150, BOX_LEFT=70;
+var MARQUEE_WORDS=["BERKEMBANG","KETERAMPILAN","KETEKUNAN","KERJA KERAS","KONSISTEN","KEMAJUAN","KEBERHASILAN","PERJUANGAN","TEKAD"];
+var HERO_MARQUEE_ITEMS=["Instagram @jri_munawar","Twitter @Jri_munawar","Bagian dari jaringan JRI MUNAWAR GROUP"];
+
+function brandText(text){
+  if(text==null) return "";
+  text=String(text);
+  if(text.indexOf("INFOTRINK")===-1) return escapeHtml(text);
+  var parts=text.split("INFOTRINK");
+  var out="";
+  for(var i=0;i<parts.length;i++){ out+=escapeHtml(parts[i]); if(i<parts.length-1) out+='<span translate="no">INFOTRINK</span>'; }
+  return out;
+}
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeAttr(s){ return escapeHtml(s); }
+function S(o){
+  var out=[];
+  for(var k in o){
+    if(o[k]==null) continue;
+    var v=o[k];
+    if(typeof v==='number' && k!=='opacity' && k!=='zIndex' && k!=='fontWeight' && k!=='lineHeight' && k!=='flexGrow' && k!=='flexShrink' && k!=='zoom') v=v+'px';
+    var kk=k.replace(/[A-Z]/g,function(m){return '-'+m.toLowerCase();});
+    out.push(kk+':'+v);
+  }
+  return out.join(';');
+}
+function getSlide(){ return document.querySelector('[data-slide-content]'); }
+function ovSelector(menuKey){ return '.overlay-menu[data-menu="'+menuKey+'"]'; }
+
+var ICONS = {
+  Lightbulb:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B6E6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+  Compass:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B6E6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
+  PenLine:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B6E6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+  Flag:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B6E6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>',
+  Workflow:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B6E6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg>',
+  Archive:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B6E6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>',
+  TrendingUp:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0B6E6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>'
+};
+
+function renderHeader(){
+  var navLinks='';
+  for(var i=0;i<NAV_ITEMS.length;i++){
+    var item=NAV_ITEMS[i];
+    if(item==="Beranda"){
+      navLinks+='<a class="nav-link" href="#" data-nav="Beranda" onclick="return IFTRK.navBeranda(event)">'+brandText("Beranda")+'</a>';
+    } else {
+      navLinks+='<a class="nav-link" href="#" data-nav="'+escapeAttr(item)+'" onclick="return IFTRK.navClick(\''+escapeAttr(item)+'\', event)">'+brandText(item)+'</a>';
+    }
+  }
+  return '<header style="'+S({position:"absolute",top:"32px",left:"70px",right:"70px",display:"flex",alignItems:"center",justifyContent:"space-between",zIndex:10})+'">'
+    +'<a href="#" onclick="return IFTRK.navBeranda(event)" style="'+S({display:"flex",alignItems:"center",gap:"12px",padding:"8px 22px 8px 10px",background:"rgba(255,255,255,0.85)",backdropFilter:"blur(10px)",borderRadius:"999px",boxShadow:"0 4px 16px rgba(11,59,58,0.12)",border:"1px solid rgba(255,255,255,0.6)",textDecoration:"none"})+'">'
+    +'<img src="slide/logo_icon.png" alt="Infotrink logo" style="'+S({width:"42px",height:"42px",objectFit:"contain",display:"block",filter:"drop-shadow(0 2px 4px rgba(11,59,58,0.15))"})+'">'
+    +'<img src="slide/logo_text.png" alt="Infotrink" style="'+S({width:"125px",height:"40px",objectFit:"contain",display:"block"})+'">'
+    +'</a><nav style="'+S({display:"flex",alignItems:"center",gap:"32px",padding:"10px 26px",background:"rgba(255,255,255,0.55)",backdropFilter:"blur(8px)",borderRadius:"999px",boxShadow:"0 4px 16px rgba(11,59,58,0.10)"})+'">'+navLinks+'</nav></header>';
+}
+
+function renderOverlay(menuKey){
+  var menuData=SUB_MENUS[menuKey];
+  var navX = state.navPositions[menuKey]!=null ? state.navPositions[menuKey] : NAV_X[menuKey];
+  var linePath="M "+navX+" "+LINE_START_Y+" L "+navX+" "+LINE_TURN_Y+" L "+BOX_LEFT+" "+LINE_TURN_Y;
+  var cards='';
+  for(var i=0;i<menuData.items.length;i++){
+    var item=menuData.items[i];
+    var delay=(0.55+i*0.06).toFixed(2);
+    cards+='<div class="ov-card" style="--d:'+delay+'s">'
+      +'<span class="ov-num">'+String(i+1).padStart(2,'0')+'</span>'
+      +'<div class="ov-title">'+brandText(item)+'</div>'
+      +'<a class="ov-btn" href="#" onclick="return false">Telusuri \u2192</a>'
+      +'</div>';
+  }
+  return '<div class="overlay-menu" data-menu="'+escapeAttr(menuKey)+'">'
+    +'<svg class="ov-svg" width="1280" height="720">'
+    +'<circle class="ov-dot-start" cx="'+navX+'" cy="'+LINE_START_Y+'" r="5"></circle>'
+    +'<path class="ov-line" d="'+linePath+'" pathLength="1"></path>'
+    +'<circle class="ov-dot-end" cx="'+BOX_LEFT+'" cy="'+LINE_TURN_Y+'" r="5"></circle>'
+    +'</svg>'
+    +'<div class="ov-box">'
+    +'<div class="ov-head"><h2 class="ov-h2">'+brandText(menuKey)+'</h2><p class="ov-desc">'+brandText(menuData.description)+'</p></div>'
+    +'<div class="ov-divider"></div>'
+    +'<div class="ov-cards">'+cards+'</div>'
+    +'</div>'
+    +'<button class="ov-x" onclick="IFTRK.closeOverlay()" aria-label="Tutup daftar isi">\u2715</button>'
+    +'</div>';
+}
+function renderAllOverlays(){
+  var out=''; for(var k in SUB_MENUS){ out+=renderOverlay(k); } return out;
+}
+
+function renderHero(){
+  return '<div data-slide-content class="slide-root" style="'+S({position:"relative",width:"1280px",height:"720px",overflow:"hidden",background:"linear-gradient(180deg, #81F6EF 0%, #9CF4ED 22%, #B2FBF6 45%, #CFFCF6 68%, #E1FFFD 88%, #E8FEFC 100%)",fontFamily:"'Open Sans', 'Segoe UI', Tahoma, sans-serif"})+'">'
+    +'<div class="hero-dim">'
+    +renderHeader()
+    +'<div style="'+S({position:"absolute",left:"70px",top:"150px",width:"560px",zIndex:5})+'">'
+    +'<h1 style="'+S({fontFamily:"'Open Sans', sans-serif",fontWeight:800,fontSize:"32px",lineHeight:1.3,color:"#0B3B3A",letterSpacing:"-0.5px",textTransform:"uppercase",margin:0,textAlign:"left"})+'">Satu Wadah untuk Perjalanan<br>Gagasan dan Berbagai Karya</h1>'
+    +'<div style="'+S({display:"flex",alignItems:"flex-start",marginTop:"44px",gap:"10px"})+'">'
+    +'<img src="slide/quote.svg" alt="" width="48" height="34" style="'+S({flexShrink:0,width:"48px",height:"34px",marginTop:"-12px",userSelect:"none"})+'">'
+    +'<p style="'+S({fontFamily:"'Open Sans', sans-serif",fontWeight:400,fontSize:"16.5px",lineHeight:1.6,color:"#1F2937",textAlign:"justify",textJustify:"inter-word",width:"470px",margin:0})+'">INFOTRINK menghimpun informasi dan dokumentasi di beragam bidang, dirangkum mulai dari awal mula, perencanaan, sampai perwujudan dan pengembangannya \u2014 semuanya tertata rapi dan terus diperbarui, sehingga perjalanan di balik setiap gagasan dan karya dapat dikenali dengan jelas.</p>'
+    +'</div>'
+    +'<div style="'+S({display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:"52px",marginLeft:"58px",width:"470px"})+'">'
+    +'<a href="#" onclick="return false" style="'+S({position:"relative",display:"inline-flex",alignItems:"center",justifyContent:"flex-end",height:"44px",width:"auto",paddingRight:"40px",paddingLeft:"60px",cursor:"pointer",textDecoration:"none"})+'">'
+    +'<img src="slide/button2.png" alt="Tombol Telusuri" style="'+S({position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"fill",display:"block",zIndex:0})+'">'
+    +'<span style="'+S({position:"relative",zIndex:1,fontFamily:"'Open Sans', sans-serif",fontSize:"16px",fontWeight:700,color:"#1a1a1a",letterSpacing:"0.3px",pointerEvents:"none"})+'">Telusuri</span></a>'
+    +'<a href="#" onclick="return false" style="'+S({position:"relative",display:"inline-flex",alignItems:"center",justifyContent:"flex-start",height:"44px",width:"auto",paddingLeft:"40px",paddingRight:"60px",cursor:"pointer",textDecoration:"none"})+'">'
+    +'<img src="slide/button1.png" alt="Tombol Kenali" style="'+S({position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"fill",display:"block",zIndex:0})+'">'
+    +'<span style="'+S({position:"relative",zIndex:1,fontFamily:"'Open Sans', sans-serif",fontSize:"16px",fontWeight:700,color:"#1a1a1a",letterSpacing:"0.3px",pointerEvents:"none"})+'">Kenali</span></a>'
+    +'</div>'
+    +'<div aria-label="Instagram @jri_munawar, Twitter @Jri_munawar, Bagian dari jaringan JRI MUNAWAR GROUP" style="'+S({marginTop:"44px",marginLeft:"58px",width:"470px",padding:"10px 0",background:"rgba(11,110,106,0.07)",borderRadius:"999px",border:"1px solid rgba(11,110,106,0.22)",overflow:"hidden",whiteSpace:"nowrap",WebkitMaskImage:"linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)",maskImage:"linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)"})+'">'
+    +'<div style="'+S({display:"inline-flex",alignItems:"center",animation:"infotrinkMarqueeHero 40s linear infinite",willChange:"transform"})+'">'+heroMarqueeInner()+heroMarqueeInner(true)+'</div></div>'
+    +'</div>'
+    +'<div style="'+S({position:"absolute",left:"660px",top:"150px",width:"550px",height:"555px",zIndex:3})+'">'
+    +renderPhoto(0,0,"slide/hero_studio_kreatif.jpg","Tim kreatif berkolaborasi mengelola konten media digital di ruang kerja")
+    +renderPhoto(20,294,"slide/hero_4_narasumber.jpg","Narasumber menyampaikan penjelasan saat sesi wawancara")
+    +renderPhoto(279,0,"slide/hero_berbagi_sesama.jpg","Relawan menyerahkan bantuan kepada warga dalam kegiatan berbagi bersama")
+    +renderPhoto(299,294,"slide/hero_pembangunan.jpg","Petugas memeriksa denah pembangunan di lokasi proyek konstruksi")
+    +'</div></div>'+renderAllOverlays()+'</div>';
+}
+function heroMarqueeInner(second){
+  var reps='';
+  for(var rep=0;rep<2;rep++){
+    for(var i=0;i<HERO_MARQUEE_ITEMS.length;i++){
+      reps+='<span style="'+S({display:"inline-flex",alignItems:"center"})+'">'
+        +'<span style="'+S({fontSize:"12px",fontWeight:600,letterSpacing:"2px",color:"rgba(11,110,106,0.85)",padding:"0 22px",whiteSpace:"nowrap"})+'">'+escapeHtml(HERO_MARQUEE_ITEMS[i])+'</span>'
+        +'<span style="'+S({color:"rgba(11,110,106,0.4)",fontSize:"11px",margin:"0 5px"})+'">\u2022</span></span>';
+    }
+  }
+  return '<div'+(second?' aria-hidden="true"':'')+' style="'+S({display:"inline-flex",alignItems:"center"})+'">'+reps+'</div>';
+}
+function renderPhoto(top,left,src,alt){
+  return '<div style="'+S({position:"absolute",top:top,left:left,width:"256px",height:"256px"})+'">'
+    +'<div style="'+S({position:"absolute",top:"18px",left:"-18px",width:"100%",height:"100%",background:"linear-gradient(135deg, #0B6E6A 0%, #5B7A78 100%)",borderRadius:"18px",opacity:0.3})+'"></div>'
+    +'<div style="'+S({position:"relative",width:"100%",height:"100%",padding:"8px",background:"linear-gradient(155deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.36) 55%, rgba(129,246,239,0.38) 100%)",border:"1px solid rgba(255,255,255,0.7)",borderRadius:"18px",boxShadow:"0 8px 22px rgba(11,59,58,0.12)",backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)"})+'">'
+    +'<img src="'+escapeAttr(src)+'" alt="'+escapeAttr(alt)+'" width="240" height="240" loading="eager" style="'+S({width:"240px",height:"240px",objectFit:"cover",borderRadius:"12px",display:"block"})+'">'
+    +'</div></div>';
+}
+
+function renderBerandaSections(){
+  return '<div style="'+S({position:"absolute",top:"720px",left:0,width:"1280px"})+'">'
+    +renderSectionPengenalanSingkat()+renderSectionAlurPerjalanan()+renderSectionKutipanSemangat()+renderSectionPenutup()
+    +'</div>';
+}
+function renderSectionPengenalanSingkat(){
+  return '<section style="'+S({position:"relative",minHeight:"700px",padding:"50px 80px 30px",background:"white",backdropFilter:"blur(6px)"})+'">'
+    +'<div style="'+S({float:"right",marginTop:"50px",marginLeft:"40px",marginBottom:"24px",position:"relative"})+'">'
+    +'<div style="'+S({position:"absolute",top:"18px",left:"-18px",width:"100%",height:"100%",background:"linear-gradient(135deg, #0B6E6A 0%, #5B7A78 100%)",borderRadius:"22px",opacity:0.3})+'"></div>'
+    +'<div style="'+S({position:"relative",width:"516px",height:"348px",borderRadius:"22px",overflow:"hidden",background:"white",boxShadow:"0 0 0 1px rgba(11,110,106,0.10), 0 14px 34px rgba(11,59,58,0.18)",border:"6px solid white"})+'">'
+    +'<img src="slide/tim_kolaborasi.jpg" alt="Suasana kerja kolaboratif" style="'+S({width:"100%",height:"100%",objectFit:"contain",display:"block"})+'">'
+    +'<div style="'+S({position:"absolute",bottom:"16px",left:"16px",padding:"10px 16px",background:"rgba(255,255,255,0.95)",borderRadius:"12px",boxShadow:"0 4px 12px rgba(0,0,0,0.1)"})+'">'
+    +'<div style="'+S({fontSize:"11px",color:"#5B7A78",fontWeight:600,letterSpacing:"0.5px"})+'">RUANG DOKUMENTASI</div>'
+    +'<div style="'+S({fontSize:"14px",color:"#0B3B3A",fontWeight:700})+'">Perjalanan Gagasan dan Karya</div>'
+    +'</div></div></div>'
+    +'<div>'
+    +'<div style="'+S({display:"inline-block",fontSize:"13px",fontWeight:700,color:"#0B6E6A",background:"rgba(11,110,106,0.1)",padding:"6px 14px",borderRadius:"999px",letterSpacing:"1px",marginBottom:"18px"})+'">TENTANG PLATFORM</div>'
+    +'<h2 style="'+S({fontSize:"26px",fontWeight:800,color:"#0B3B3A",margin:"0 0 22px 0",letterSpacing:"0.5px",lineHeight:1.3,overflow:"hidden",textTransform:"uppercase"})+'">Setiap Pembangunan<br>Mempunyai Awal</h2>'
+    +'<p style="'+S({fontSize:"16.5px",lineHeight:1.75,color:"#1F2937",margin:0,textAlign:"justify"})+'">Keyakinan sederhana itulah yang melatarbelakangi INFOTRINK: hampir semua hal yang berdiri hari ini bermula dari sebuah gagasan yang dirumuskan dan dirancang sebelum akhirnya diwujudkan sedikit demi sedikit. Atas dasar itu, perjalanan pada berbagai lini dicatat sesuai tahapannya, mulai dari perencanaan dan perintisan, berlanjut ke perwujudan dan pelaksanaan, hingga pengelolaan dan pengembangannya. Penyajiannya dibuat jujur pada posisinya. Yang masih berupa gagasan diperkenalkan sebagai gagasan, sedangkan yang sudah berjalan dipaparkan sebagaimana perkembangannya, tanpa diperbesar dan tanpa diperkecil. Kedudukannya pun dijaga dengan batas yang jelas. INFOTRINK tidak berperan sebagai pihak yang memiliki atau membawahi apa yang diperkenalkan, dan setiap hal tetap berada di bawah pengelolaan pihaknya masing-masing. Yang tersaji di sini hanyalah gambaran, uraian, dan tautan yang mengarah pada sumbernya, bukan pengganti dari peran resminya. Berbeda dengan unggahan yang cepat berganti atau pemberitaan yang mudah berlalu, dokumentasi semacam ini disusun untuk bertahan lebih lama: setiap kemajuan ditambahkan, setiap perubahan diperbarui, agar yang terbaca selalu sesuai keadaan terkininya dan tidak berhenti pada versi lama. Dengan cara itulah sebuah awal tidak berakhir sebagai kenangan, melainkan terus hidup sebagai catatan yang berguna, baik bagi pihak yang melanjutkan perjalanannya maupun bagi siapa pun yang ingin memahami dari mana semuanya dimulai.</p>'
+    +'</div><div style="clear:both"></div></section>';
+}
+function renderSectionAlurPerjalanan(){
+  var stages=[{icon:"Lightbulb",title:"Gagasan",desc:"Bermula dari pemikiran yang dicatat apa adanya."},{icon:"Compass",title:"Perencanaan",desc:"Tujuan, kebutuhan, dan kemampuan disusun terarah."},{icon:"PenLine",title:"Perancangan",desc:"Rencana diberi bentuk, struktur, dan identitas."},{icon:"Flag",title:"Perintisan",desc:"Langkah pertama diambil sesuai kesiapan."},{icon:"Workflow",title:"Pelaksanaan",desc:"Konsep dijalankan melalui kegiatan yang nyata."},{icon:"Archive",title:"Pengelolaan",desc:"Yang berjalan dirawat dan dievaluasi secara teratur."},{icon:"TrendingUp",title:"Pengembangan",desc:"Kualitas ditingkatkan bertahap dan terukur."}];
+  var xs=[80,235,390,545,700,855,1010]; var yLow=345, yHigh=110;
+  var jalur="M 80 345 C 140 345 175 110 235 110 C 295 110 330 345 390 345 C 450 345 485 110 545 110 C 605 110 640 345 700 345 C 760 345 795 110 855 110 C 915 110 950 345 1010 345";
+  var stageNodes='';
+  for(var i=0;i<stages.length;i++){
+    var st=stages[i]; var high=i%2===1; var y=high?yHigh:yLow;
+    var labelTop=high?2:366; var labelLeft=i===0?2:(xs[i]-85); var labelWidth=i===0?156:170;
+    stageNodes+='<div>'
+      +'<div style="'+S({position:"absolute",left:(xs[i]-24),top:(y-24),width:"48px",height:"48px",borderRadius:"50%",background:"#FFFFFF",border:"2px solid #0B6E6A",boxShadow:"0 0 0 6px rgba(11,110,106,0.09), 0 6px 14px rgba(11,59,58,0.14)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1})+'">'+(ICONS[st.icon]||'')+'</div>'
+      +'<div style="'+S({position:"absolute",left:labelLeft,top:labelTop,width:labelWidth,textAlign:"center",display:"flex",flexDirection:"column",gap:"4px"})+'">'
+      +'<span style="'+S({fontSize:"14.5px",fontWeight:800,color:"#0B3B3A",letterSpacing:"0.2px",textTransform:"uppercase",whiteSpace:"nowrap"})+'">'+escapeHtml(st.title)+'</span>'
+      +'<span style="'+S({fontSize:"12.3px",lineHeight:1.5,color:"#4A6A67"})+'">'+escapeHtml(st.desc)+'</span>'
+      +'</div></div>';
+  }
+  return '<section aria-label="Alur perjalanan sebuah pembangunan" style="'+S({position:"relative",padding:"56px 80px 58px",background:"#FFFFFF",borderTop:"1px solid rgba(11,110,106,0.12)",borderBottom:"1px solid rgba(11,110,106,0.12)",backgroundImage:"linear-gradient(rgba(11,110,106,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(11,110,106,0.035) 1px, transparent 1px)",backgroundSize:"40px 40px",overflow:"hidden"})+'">'
+    +'<div style="'+S({display:"inline-block",fontSize:"12.5px",fontWeight:700,color:"#0B6E6A",background:"rgba(11,110,106,0.1)",padding:"6px 14px",borderRadius:"999px",letterSpacing:"1.5px",marginBottom:"16px"})+'">FILOSOFI DASAR</div>'
+    +'<h2 style="'+S({fontSize:"27px",fontWeight:800,color:"#0B3B3A",margin:"0 0 12px 0",letterSpacing:"0.5px",lineHeight:1.3,maxWidth:"1060px",textTransform:"uppercase"})+'">Menumbuhkan Pembangunan Langkah demi Langkah</h2>'
+    +'<p style="'+S({fontSize:"15px",lineHeight:1.72,color:"#37605D",margin:"0 0 10px 0",textAlign:"justify"})+'">Seperti menumbuhkan sesuatu dari tanah, sebuah pembangunan tidak langsung berdiri dalam bentuk akhirnya. Ia melewati urutan tahap yang saling menyambung \u2014 dimulai dari pemikiran yang dirumuskan, disusun dan dirancang, diwujudkan, kemudian dirawat dan terus dikembangkan. Jalur di bawah ini menggambarkan alur itulah yang dicatat pada setiap dokumentasi, sehingga yang terbaca bukan hanya bentuk jadinya, tetapi juga perjalanan yang membentuknya.</p>'
+    +'<div style="'+S({position:"relative",height:"472px",marginTop:"14px"})+'">'
+    +'<svg width="1120" height="472" viewBox="0 0 1120 472" role="img" aria-label="Jalur tahapan pembangunan dari gagasan hingga pengembangan" style="'+S({position:"absolute",inset:0})+'">'
+    +'<path d="'+jalur+'" fill="none" stroke="rgba(11,110,106,0.08)" stroke-width="9" stroke-linecap="round"></path>'
+    +'<path d="'+jalur+'" fill="none" stroke="#0B6E6A" stroke-width="2" stroke-dasharray="7 7" stroke-linecap="round" opacity="0.5"></path>'
+    +'<line x1="34" y1="345" x2="76" y2="345" stroke="#0B6E6A" stroke-width="2" stroke-dasharray="5 6" opacity="0.45"></line>'
+    +'<circle cx="28" cy="345" r="4" fill="#0B6E6A" opacity="0.45"></circle>'
+    +'<line x1="1010" y1="345" x2="1080" y2="345" stroke="#0B6E6A" stroke-width="2" stroke-dasharray="5 6" opacity="0.45"></line>'
+    +'<polygon points="1080,338 1094,345 1080,352" fill="#0B6E6A" opacity="0.7"></polygon>'
+    +'</svg>'+stageNodes+'</div></section>';
+}
+function renderSectionKutipanSemangat(){
+  var corner="position:absolute; width:38px; height:38px; border-color:rgba(11,110,106,0.45); border-style:solid;";
+  return '<section aria-label="Semangat dalam bekerja" style="'+S({position:"relative",overflow:"hidden",background:"linear-gradient(180deg, #A5F4EC 0%, #C4FAF3 45%, #E2FEFA 100%)"})+'">'
+    +'<div aria-hidden="true" style="'+S({height:"3px",background:"linear-gradient(90deg, rgba(11,110,106,0) 0%, #0B6E6A 18%, #D9B45B 50%, #0B6E6A 82%, rgba(11,110,106,0) 100%)"})+'"></div>'
+    +'<div aria-hidden="true" style="'+S({position:"absolute",top:"-120px",left:"50%",transform:"translateX(-50%)",width:"760px",height:"300px",borderRadius:"50%",background:"radial-gradient(closest-side, rgba(255,255,255,0.55), rgba(255,255,255,0))"})+'"></div>'
+    +'<div aria-hidden="true" style="'+S({position:"absolute",top:"34px",left:"34px",fontFamily:"Georgia, 'Times New Roman', serif",fontSize:"110px",lineHeight:1,color:"rgba(11,110,106,0.16)",userSelect:"none"})+'">\u201c</div>'
+    +'<div aria-hidden="true" style="'+S({position:"absolute",bottom:"-30px",right:"34px",fontFamily:"Georgia, 'Times New Roman', serif",fontSize:"110px",lineHeight:1,color:"rgba(11,110,106,0.16)",userSelect:"none"})+'">\u201d</div>'
+    +'<div aria-hidden="true" style="'+S({position:"absolute",top:"30px",bottom:"30px",left:"44px",right:"44px",pointerEvents:"none"})+'">'
+    +'<div style="'+corner+'top:0; left:0; border-width:2px 0 0 2px;"></div>'
+    +'<div style="'+corner+'top:0; right:0; border-width:2px 2px 0 0;"></div>'
+    +'<div style="'+corner+'bottom:0; left:0; border-width:0 0 2px 2px;"></div>'
+    +'<div style="'+corner+'bottom:0; right:0; border-width:0 2px 2px 0;"></div></div>'
+    +'<div style="'+S({position:"relative",padding:"58px 96px"})+'">'
+    +'<div style="'+S({display:"flex",justifyContent:"center"})+'">'
+    +'<div style="'+S({display:"inline-flex",alignItems:"center",gap:"10px",fontSize:"12px",fontWeight:800,color:"#0B6E6A",background:"rgba(255,255,255,0.8)",border:"1px solid rgba(11,110,106,0.35)",padding:"8px 22px",borderRadius:"999px",letterSpacing:"3px",boxShadow:"0 3px 12px rgba(11,59,58,0.08)"})+'">'
+    +'<span style="'+S({width:"6px",height:"6px",borderRadius:"50%",background:"#D9B45B",display:"inline-block"})+'"></span>SEMANGAT KERJA<span style="'+S({width:"6px",height:"6px",borderRadius:"50%",background:"#D9B45B",display:"inline-block"})+'"></span></div></div>'
+    +'<h2 style="'+S({fontSize:"36px",fontWeight:800,color:"#0B3B3A",textAlign:"center",whiteSpace:"nowrap",lineHeight:1.25,letterSpacing:"0.5px",textTransform:"uppercase",margin:"24px 0 0"})+'">Tidak Ada Perkembangan Tanpa Kesungguhan</h2>'
+    +'<div aria-hidden="true" style="'+S({display:"flex",alignItems:"center",justifyContent:"center",gap:"14px",width:"460px",margin:"24px auto 26px"})+'">'
+    +'<div style="'+S({flex:1,height:"1.5px",background:"linear-gradient(90deg, rgba(11,110,106,0), rgba(11,110,106,0.6))"})+'"></div>'
+    +'<div style="'+S({width:"9px",height:"9px",transform:"rotate(45deg)",background:"#D9B45B",boxShadow:"0 0 0 3px rgba(217,180,91,0.25)"})+'"></div>'
+    +'<div style="'+S({flex:1,height:"1.5px",background:"linear-gradient(270deg, rgba(11,110,106,0), rgba(11,110,106,0.6))"})+'"></div></div>'
+    +'<p style="'+S({fontSize:"17px",lineHeight:1.9,color:"#1F4E4B",fontWeight:500,textAlign:"justify",textJustify:"inter-word",margin:0})+'">Menumbuhkan sesuatu menuntut kerja yang sungguh-sungguh: disiplin dalam menjalankan, teliti dalam memeriksa, sabar dalam menanti hasil, dan rendah hati dalam memperbaiki kekurangan. Kecepatan tidak boleh mengorbankan ketelitian, dan hasil yang dicapai tidak boleh mengabaikan tanggung jawab \u2014 sebab perkembangan yang baik selalu dibangun di atas proses yang benar.</p>'
+    +'</div></section>';
+}
+function renderSectionPenutup(){
+  var marqueeInner=(function(){
+    var copy1='';
+    for(var i=0;i<MARQUEE_WORDS.length;i++){
+      copy1+='<span style="'+S({display:"inline-flex",alignItems:"center"})+'"><span style="'+S({fontSize:"13px",fontWeight:700,letterSpacing:"2.5px",color:"#81F6EF",padding:"0 20px",whiteSpace:"nowrap"})+'">'+escapeHtml(MARQUEE_WORDS[i])+'</span><span style="'+S({color:"rgba(129,246,239,0.45)",fontSize:"11px"})+'">\u2022</span></span>';
+    }
+    return '<div style="'+S({display:"inline-flex",alignItems:"center"})+'">'+copy1+'</div>';
+  })();
+  var marquee='<div aria-label="Berkembang, Keterampilan, Ketekunan, Kerja Keras, Konsisten, Kemajuan, Keberhasilan, Perjuangan, Tekad" style="'+S({display:"block",maxWidth:"829px",marginBottom:"18px",padding:"11px 0",background:"rgba(129,246,239,0.08)",borderRadius:"999px",border:"1px solid rgba(129,246,239,0.25)",overflow:"hidden",whiteSpace:"nowrap",WebkitMaskImage:"linear-gradient(90deg, transparent 0%, black 7%, black 93%, transparent 100%)",maskImage:"linear-gradient(90deg, transparent 0%, black 7%, black 93%, transparent 100%)"})+'"><div style="'+S({display:"inline-flex",alignItems:"center",animation:"infotrinkMarquee 26s linear infinite",willChange:"transform"})+'">'+marqueeInner+marqueeInner.replace('<div','<div aria-hidden="true"')+'</div></div>';
+  var navFooter=NAV_ITEMS.map(function(i){return '<li><a href="#" onclick="return false" style="'+S({fontSize:"13px",color:"rgba(255,255,255,0.75)",textDecoration:"none"})+'">'+brandText(i)+'</a></li>';}).join('');
+  var bidangFooter=["Media Digital","Pembangunan","Personal","Bidang Lainnya"].map(function(i){return '<li><a href="#" onclick="return false" style="'+S({fontSize:"13px",color:"rgba(255,255,255,0.75)",textDecoration:"none"})+'">'+escapeHtml(i)+'</a></li>';}).join('');
+  var jenisFooter=["Media Informasi","Hasil Riset","Kajian & Analisis","Laporan","Data & Referensi","Gagasan"].map(function(t){return '<li><a href="#" onclick="return false" style="'+S({fontSize:"13px",color:"rgba(255,255,255,0.75)",textDecoration:"none"})+'">'+escapeHtml(t)+'</a></li>';}).join('');
+  return '<section style="'+S({position:"relative",background:"linear-gradient(180deg, #0B3B3A 0%, #0B6E6A 60%, #0B3B3A 100%)",overflow:"hidden"})+'">'
+    +'<div aria-hidden="true" style="'+S({position:"absolute",top:"-150px",right:"-150px",width:"400px",height:"400px",borderRadius:"50%",background:"rgba(129,246,239,0.08)"})+'"></div>'
+    +'<div aria-hidden="true" style="'+S({position:"absolute",bottom:"-100px",left:"-100px",width:"300px",height:"300px",borderRadius:"50%",background:"rgba(129,246,239,0.06)"})+'"></div>'
+    +'<div aria-hidden="true" style="'+S({position:"absolute",top:"40%",left:"35%",width:"150px",height:"150px",borderRadius:"50%",background:"rgba(129,246,239,0.04)"})+'"></div>'
+    +'<div style="'+S({position:"relative",padding:"30px 80px 24px"})+'">'+marquee
+    +'<div style="'+S({display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:"60px"})+'">'
+    +'<div style="'+S({flex:1,minWidth:0,maxWidth:"829px"})+'">'
+    +'<h2 style="'+S({fontSize:"22px",fontWeight:800,color:"white",margin:"0 0 16px 0",letterSpacing:"0.2px",lineHeight:1.35,textTransform:"uppercase"})+'">Dokumentasi yang Terhimpun Menanti untuk Ditelusuri</h2>'
+    +'<p style="'+S({fontSize:"16px",lineHeight:1.7,color:"rgba(255,255,255,0.85)",margin:0,textAlign:"justify",textJustify:"inter-word"})+'">Berbagai gagasan, karya, dan inisiatif telah terdokumentasi dalam satu wadah yang terstruktur. Setiap catatan memuat konteks dan tahapan perkembangannya sehingga siap dijelajahi dan dimanfaatkan kembali kapan saja.</p>'
+    +'</div>'
+    +'<div style="'+S({display:"flex",flexDirection:"column",gap:"14px",minWidth:"220px"})+'">'
+    +'<a href="#" onclick="return false" style="'+S({display:"inline-flex",alignItems:"center",justifyContent:"center",gap:"8px",padding:"16px 32px",background:"#FDEEC5",color:"#0B3B3A",border:"2px solid #0B3B3A",borderRadius:"999px",fontSize:"15px",fontWeight:700,textDecoration:"none",boxShadow:"0 4px 14px rgba(0,0,0,0.2)",letterSpacing:"0.3px",whiteSpace:"nowrap"})+'">Telusuri \u2192</a>'
+    +'<a href="#" onclick="return false" style="'+S({display:"inline-flex",alignItems:"center",justifyContent:"center",gap:"8px",padding:"16px 32px",background:"rgba(255,255,255,0.1)",color:"white",border:"2px solid rgba(255,255,255,0.4)",borderRadius:"999px",fontSize:"15px",fontWeight:700,textDecoration:"none",letterSpacing:"0.3px",whiteSpace:"nowrap"})+'">'+brandText("Kenali INFOTRINK")+'</a>'
+    +'</div></div></div>'
+    +'<div style="'+S({position:"relative",padding:"32px 80px 24px",display:"grid",gridTemplateColumns:"1.6fr 1fr 1fr 1fr",gap:"40px"})+'">'
+    +'<div><div style="'+S({display:"flex",alignItems:"center",gap:"10px",marginBottom:"16px"})+'"><img src="slide/logo_icon.png" alt="Infotrink" style="'+S({width:"36px",height:"36px",objectFit:"contain",display:"block"})+'"><img src="slide/logo_text.png" alt="Infotrink" style="'+S({width:"110px",height:"36px",objectFit:"contain",display:"block"})+'"></div>'
+    +'<p style="'+S({fontSize:"12.5px",lineHeight:1.65,color:"rgba(255,255,255,0.7)",margin:"0 0 16px 0",textAlign:"justify",textJustify:"inter-word"})+'">Tempat perjalanan gagasan dan karya diperkenalkan melalui informasi dan dokumentasi.</p>'
+    +'<div style="'+S({display:"flex",gap:"8px"})+'">'+['M:#3B82F6','P:#10B981','Pe:#F59E0B','L:#8B5CF6'].map(function(t){var p=t.split(':');return '<div style="'+S({fontSize:"10px",fontWeight:700,color:"white",background:p[1]+'40',border:"1px solid "+p[1]+'80',padding:"3px 10px",borderRadius:"6px",letterSpacing:"0.3px"})+'">'+escapeHtml(p[0])+'</div>';}).join('')+'</div></div>'
+    +'<div><h4 style="'+S({fontSize:"12px",fontWeight:700,color:"#81F6EF",letterSpacing:"1px",margin:"0 0 16px 0"})+'">NAVIGASI</h4><ul style="'+S({listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:"9px"})+'">'+navFooter+'</ul></div>'
+    +'<div><h4 style="'+S({fontSize:"12px",fontWeight:700,color:"#81F6EF",letterSpacing:"1px",margin:"0 0 16px 0"})+'">BIDANG</h4><ul style="'+S({listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:"9px"})+'">'+bidangFooter+'</ul></div>'
+    +'<div><h4 style="'+S({fontSize:"12px",fontWeight:700,color:"#81F6EF",letterSpacing:"1px",margin:"0 0 16px 0"})+'">JENIS MATERI</h4><ul style="'+S({listStyle:"none",padding:0,margin:0,display:"flex",flexDirection:"column",gap:"9px"})+'">'+jenisFooter+'</ul></div>'
+    +'</div>'
+    +'<div style="'+S({position:"relative",padding:"18px 80px",background:"rgba(0,0,0,0.25)",display:"flex",alignItems:"center",gap:"28px"})+'">'
+    +'<div style="'+S({fontSize:"11.5px",color:"rgba(255,255,255,0.65)",lineHeight:1.55,flex:1,minWidth:0})+'">\u00a9 '+new Date().getFullYear()+' '+brandText("INFOTRINK")+'. Hak cipta dilindungi. Seluruh materi yang dipublikasikan merupakan hasil riset, kajian, pemikiran, dan dokumentasi yang dikelola secara terstruktur untuk kepentingan pengetahuan.</div>'
+    +'<div style="'+S({width:"1px",alignSelf:"stretch",background:"rgba(129,246,239,0.2)",flexShrink:0})+'"></div>'
+    +'<div style="'+S({display:"flex",gap:"12px",fontSize:"11px",color:"rgba(255,255,255,0.5)",letterSpacing:"0.3px",flexShrink:0,whiteSpace:"nowrap"})+'"><span>Syarat &amp; Ketentuan</span><span style="'+S({opacity:0.4})+'">\u2022</span><span>Kebijakan Privasi</span></div>'
+    +'</div></section>';
+}
+
+function updateNavHighlight(){
+  var slide=getSlide(); if(!slide) return;
+  var links=slide.querySelectorAll('.nav-link');
+  for(var i=0;i<links.length;i++){
+    var item=links[i].getAttribute('data-nav');
+    var isActive=state.activeMenu===item;
+    var isLastActive=!state.activeMenu && state.lastActiveMenu===item;
+    var isDefaultBeranda=item==="Beranda" && !state.activeMenu && !state.lastActiveMenu;
+    links[i].classList.toggle('on', !!(isActive||isLastActive||isDefaultBeranda));
+  }
+}
+function navBeranda(ev){
+  if(ev) ev.preventDefault();
+  if(state.activeMenu) closeOverlay();
+  scrollTop();
+  return false;
+}
+function navClick(item, ev){
+  if(ev) ev.preventDefault();
+  var slide=getSlide(); if(!slide) return false;
+  if(state.activeMenu===item){ closeOverlay(); return false; }
+  if(state.activeMenu){ var oldOv=slide.querySelector(ovSelector(state.activeMenu)); if(oldOv) oldOv.classList.remove('open'); }
+  measureNavPositions();
+  state.activeMenu=item; state.lastActiveMenu=item;
+  var ov=slide.querySelector(ovSelector(item));
+  if(ov) ov.classList.add('open');
+  slide.classList.add('menu-open');
+  document.body.classList.add('menu-locked');
+  updateNavHighlight();
+  return false;
+}
+function closeOverlay(){
+  if(!state.activeMenu) return;
+  var slide=getSlide();
+  if(slide){ var ov=slide.querySelector(ovSelector(state.activeMenu)); if(ov) ov.classList.remove('open'); slide.classList.remove('menu-open'); }
+  document.body.classList.remove('menu-locked');
+  state.activeMenu=null;
+  updateNavHighlight();
+}
+function scrollTop(){ var c=document.getElementById('container'); if(c) c.scrollTop=0; }
+
+window.IFTRK={ navClick:navClick, navBeranda:navBeranda, closeOverlay:closeOverlay };
+
+function updateScale(){
+  var el=document.getElementById('container'); if(!el) return;
+  var w=el.clientWidth; state.scale=Math.max(w/1280,0.5);
+}
+function applyZoom(){
+  var content=document.getElementById('content');
+  if(content && state.scale>0) content.style.zoom=state.scale;
+}
+function measureContentHeight(){
+  var content=document.getElementById('content'); if(!content) return;
+  var actualHeight=content.scrollHeight*state.scale;
+  if(actualHeight>0){ state.contentHeight=actualHeight; var wrapper=document.getElementById('wrapper'); if(wrapper) wrapper.style.height=actualHeight+'px'; }
+}
+function measureNavPositions(){
+  var slideEl=getSlide(); if(!slideEl) return;
+  var slideRect=slideEl.getBoundingClientRect();
+  var currentScale=slideRect.width/1280; if(currentScale===0) return;
+  var positions={};
+  var navEls=slideEl.querySelectorAll('[data-nav]');
+  for(var i=0;i<navEls.length;i++){
+    var navEl=navEls[i]; var item=navEl.getAttribute('data-nav');
+    var navRect=navEl.getBoundingClientRect();
+    positions[item]=(navRect.left+navRect.width/2-slideRect.left)/currentScale;
+  }
+  state.navPositions=positions;
+  updateOverlayPositions();
+}
+function updateOverlayPositions(){
+  var slideEl=getSlide(); if(!slideEl) return;
+  var overlays=slideEl.querySelectorAll('.overlay-menu');
+  for(var i=0;i<overlays.length;i++){
+    var menuKey=overlays[i].getAttribute('data-menu');
+    var navX=state.navPositions[menuKey]!=null?state.navPositions[menuKey]:NAV_X[menuKey];
+    var linePath="M "+navX+" "+LINE_START_Y+" L "+navX+" "+LINE_TURN_Y+" L "+BOX_LEFT+" "+LINE_TURN_Y;
+    var path=overlays[i].querySelector('path'); if(path) path.setAttribute('d',linePath);
+    var circles=overlays[i].querySelectorAll('circle'); if(circles.length>=1) circles[0].setAttribute('cx',navX);
+  }
+}
+
+function mount(html){
+  var content=document.getElementById('content');
+  content.innerHTML=html;
+  applyZoom();
+  updateNavHighlight();
+  requestAnimationFrame(function(){ measureContentHeight(); measureNavPositions(); });
+}
+function boot(){
+  updateScale();
+  state.view='beranda'; state.activeMenu=null; state.lastActiveMenu=null;
+  mount(renderHero()+renderBerandaSections());
+  window.addEventListener('resize',function(){ updateScale(); applyZoom(); measureContentHeight(); measureNavPositions(); });
+  window.addEventListener('orientationchange',function(){ setTimeout(function(){ updateScale(); applyZoom(); measureContentHeight(); measureNavPositions(); },100); });
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ measureNavPositions(); }); }
+  setTimeout(function(){ updateScale(); applyZoom(); measureContentHeight(); measureNavPositions(); },100);
+  setTimeout(function(){ updateScale(); applyZoom(); measureContentHeight(); measureNavPositions(); },500);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && state.activeMenu) closeOverlay(); });
+  var content=document.getElementById('content');
+  if(content && typeof MutationObserver!=='undefined'){
+    var mo=new MutationObserver(function(){ requestAnimationFrame(measureContentHeight); });
+    mo.observe(content,{childList:true,subtree:true,characterData:true});
+  }
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',boot); } else { boot(); }
+})();
+</script>
+</body>
+</html>
